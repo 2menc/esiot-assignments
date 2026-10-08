@@ -7,7 +7,7 @@
 #include "Arduino.h" 
 #include "core.h"
 
-
+/* init should initialize the necessary structures to store players and context data*/
 void kernel_init(); // no free: not necesary because of the gameloop
 
 void change_state(State newState);

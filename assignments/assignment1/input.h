@@ -2,6 +2,6 @@
 #define __INPUT__
 
 void input_init();
-void is_button_pressed(short buttonIndex);
+bool is_button_pressed(short buttonIndex);
 
 #endif
