@@ -20,6 +20,6 @@ void LOG(const String& messageAddress);
 
 // context, players declatation
 extern Context currentContext;
-extern Player[NUMBER_OF_PLAYERS];
+extern Player players[NUMBER_OF_PLAYERS];
 
 #endif

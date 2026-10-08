@@ -1,8 +1,6 @@
 #ifndef __CONFIG__
 #define __CONFIG__
 
-#include "core.h"
-
 #define NUMBER_OF_PLAYERS 2
 
 #define PIN_BUTTON_ONE 1
@@ -20,6 +18,7 @@
 #define PIN_LED_GREEN_TWO 9
 #define PIN_LED_RED_TWO 10
 
+#include "core.h"
 
 void assign_pins_to_player(Player player);
 

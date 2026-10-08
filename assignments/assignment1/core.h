@@ -1,12 +1,12 @@
 #ifndef __CORE__
 #define __CORE__
 
-#define NUMBER_OF_PLAYERS 2
+#include "config.h"
 
 typedef enum {
   STATE_WAITING_FOR_PLAYERS,
   STATE_SLEEP,
-  TATE_PLAY,
+  STATE_PLAY,
   STATE_END_ROUND,
   STATE_END_GAME
 } State;
@@ -23,7 +23,6 @@ typedef struct {
   short greenLedPin;
   short redLedPin;
   short buttonPin;
-    
 } Player;
 
 typedef struct {
@@ -34,5 +33,20 @@ typedef struct {
 
   Player players[NUMBER_OF_PLAYERS];
 } Context;
+
+
+// STATE HANDLERS
+
+void core_init();
+
+void handle_current_state(State currentState);
+void handle_event(Event occuredEvent);
+
+void handle_state_waitingForPlayers();
+void handle_state_sleep();
+void handle_state_play();
+void handle_state_endRound();
+void handle_state_endGame();
+
 
 #endif
