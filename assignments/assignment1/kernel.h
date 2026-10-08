@@ -1,9 +1,12 @@
 /*
   the kernel should manage gameState changes that can be caused by events or conditions
 */
-#pragma once
+#ifndef __KERNEL__
+#define __KERNEL__
 
+#include "Arduino.h" 
 #include "core.h"
+
 
 void kernel_init(); // no free: not necesary because of the gameloop
 
@@ -18,3 +21,5 @@ void LOG(const String& messageAddress);
 // context, players declatation
 extern Context currentContext;
 extern Player[NUMBER_OF_PLAYERS];
+
+#endif

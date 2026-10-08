@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __CONFIG__
+#define __CONFIG__
 
 #include "core.h"
 
@@ -20,3 +21,5 @@
 
 
 void assign_pins_to_player(Player player);
+
+#endif

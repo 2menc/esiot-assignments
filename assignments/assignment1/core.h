@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __CORE__
+#define __CORE__
 
 #define NUMBER_OF_PLAYERS 2
 
@@ -34,3 +35,4 @@ typedef struct {
   Player players[NUMBER_OF_PLAYERS];
 } Context;
 
+#endif
