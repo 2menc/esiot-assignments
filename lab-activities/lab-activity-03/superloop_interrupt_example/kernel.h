@@ -18,6 +18,6 @@ bool isJustEnteredInState();
 
 /* for debugging */
 void logMsg(const String& msg);
- 
+
 
 #endif
