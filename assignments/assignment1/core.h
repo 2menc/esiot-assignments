@@ -30,6 +30,7 @@ typedef struct {
 typedef struct {
   State currentState;
   Event currentEvent;
+  long timeEnteredInState;
 
   short difficulty;
 
