@@ -5,6 +5,8 @@
 
 #define NUMBER_OF_PLAYERS 2
 
+#define WAITING_TIMEOUT 10000 //ms
+
 typedef enum {
   STATE_WAITING_FOR_PLAYERS,
   STATE_SLEEP,

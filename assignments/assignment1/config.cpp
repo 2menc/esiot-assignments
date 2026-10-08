@@ -2,7 +2,7 @@
 
 short maxTotalPins = NUMBER_OF_PLAYERS * (2 + 1);
 
-void assign_pins_to_player(Player player) {
+void assign_pins_to_player(Player &player) {
   #ifdef __CORE__
 
   switch(player.playerNumber) {

@@ -56,14 +56,14 @@ Player player_create(short playerNumber) {
   return player;
 }
 
-void led_fade(short ledPin, int &currentPulseValue, short &fadeAmount) {
+void led_fade(short ledPin, int &currentPulseValue, short fadeAmount) {
 
   if(currentPulseValue + fadeAmount > 255 || currentPulseValue - fadeAmount < 0) {
     fadeAmount = -fadeAmount;
   } 
 
-  int value = currentPulseValue + fadeAmount;
-  analogWrite(ledPin, value);
+  currentPulseValue += fadeAmount;
+  analogWrite(ledPin, currentPulseValue);
 }
 
 void led_turn_off(short ledPin) {
