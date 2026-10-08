@@ -3,12 +3,25 @@
 #include "input.h"
 #include "config.h"
 #include "core.h"
-#include "stateHandler.h"
 
 #define DEBOUNCE_TIME 100 //ms
 
-buttonsPressed = {false, false};
-lastPressedTimes = {0, 0};
+bool buttonsPressed[NUMBER_OF_PLAYERS] = {false, false};
+long lastPressedTimes[NUMBER_OF_PLAYERS] = {0, 0};
+
+void button_handler0(){ button_handler(0); }
+void button_handler1(){ button_handler(1); }
+void (*button_handlers[NUMBER_OF_PLAYERS])() = { button_handler0, button_handler1 };
+void button_handler(short buttonIndex) {
+
+  long timeStamp = millis();
+
+  if(timeStamp - lastPressedTimes[buttonIndex] > DEBOUNCE_TIME) {
+
+    buttonsPressed[buttonIndex] = true;
+    lastPressedTimes[buttonIndex] = timeStamp; 
+  }
+}
 
 void leds_init(short redPin, short greenPin) {
 
@@ -18,7 +31,7 @@ void leds_init(short redPin, short greenPin) {
 
 void buttons_init(short pin) {
   pinMode(pin, INPUT);
-  attachInterrupt(digitalPinToInterrupt(pin), button_handler, RISING);
+  attachInterrupt(digitalPinToInterrupt(pin), button_handlers[pin-1], RISING);
 }
 
 bool read_digital(short fromPin) {
@@ -39,21 +52,10 @@ void input_init(Player players[NUMBER_OF_PLAYERS]) {
   }
 }
 
-void button_handler(short buttonIndex) {
-
-  long timeStamp = millis()
-
-  if(timeStamp - lastPressedTimes[button_handler] > DEBOUNCE_TIME) {
-
-    buttonsPressed[buttonIndex] = true;
-    lastPressedTimes[buttonIndex] = timeStamp; 
-  }
-}
-
 void input_reset() {
   long timeStamp = millis();
 
-  for(int i = 0; i < sizeof(buttonsPressed)/sizeof(long); i++) {
+  for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
     buttonsPressed[i] = false;
     lastPressedTimes[i] = timeStamp;
   }

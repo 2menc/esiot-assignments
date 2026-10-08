@@ -1,7 +1,9 @@
 #ifndef __CORE__
 #define __CORE__
 
-#include "config.h"
+#include "Arduino.h"
+
+#define NUMBER_OF_PLAYERS 2
 
 typedef enum {
   STATE_WAITING_FOR_PLAYERS,
@@ -36,17 +38,18 @@ typedef struct {
 
 
 // STATE HANDLERS
+#include "config.h"
 
 void core_init();
 
 void handle_current_state(State currentState);
 void handle_event(Event occuredEvent);
 
-void handle_state_waitingForPlayers();
-void handle_state_sleep();
-void handle_state_play();
-void handle_state_endRound();
-void handle_state_endGame();
+void handle_state_waitingForPlayers(Context ctx);
+void handle_state_sleep(Context ctx);
+void handle_state_play(Context ctx);
+void handle_state_endRound(Context ctx);
+void handle_state_endGame(Context ctx);
 
 
 #endif

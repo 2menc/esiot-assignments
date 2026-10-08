@@ -10,6 +10,6 @@ void input_init();
 bool is_button_pressed(short buttonIndex);
 void input_reset();
 
-void button_handler(short buttonIndex);
+void button_handler(short index);
 
 #endif
