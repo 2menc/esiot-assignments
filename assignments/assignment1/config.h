@@ -6,7 +6,7 @@
 #define PIN_BUTTON_ONE 1
 #define PIN_BUTTON_TWO 2
 
-#define POTENTIOMETER_PIN 3; //pin that supports pwm
+#define POTENTIOMETER_PIN 3 //pin that supports pwm
 
 /*
  the config.cpp will automatically assign each player his pins, between 9 and 12. 
