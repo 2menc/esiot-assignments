@@ -11,5 +11,6 @@ bool is_button_pressed(short buttonIndex);
 void input_reset();
 
 void button_handler(short index);
+short get_difficulty();
 
 #endif

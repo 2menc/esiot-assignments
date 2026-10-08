@@ -61,6 +61,11 @@ void input_reset() {
   }
 }
 
+short get_difficulty() {
+  int read = analogRead(POTENTIOMETER_PIN);
+  short mappedReading = map(0, 2^10, 1, 4);
+  return mappedReading;
+}
 
 
 
