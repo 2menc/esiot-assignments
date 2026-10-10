@@ -7,6 +7,8 @@
 
 #define WAITING_TIMEOUT 10000 //ms
 
+const String MESSAGE_WAITING = "Welcome to React! Game. Press Buttons To Start";
+
 typedef enum {
   STATE_WAITING_FOR_PLAYERS,
   STATE_SLEEP,

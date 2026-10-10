@@ -44,24 +44,42 @@ void display_static(String message, short cursor[2]) {
 void display_rolling(String message) {
   long currentScrollTime = millis();
   short currentCursor[2];
+  static short scrollCursorX = LCD_WIDTH - 1;
 
   if(justStartedRolling) {
     currentCursor[0] = LCD_WIDTH-1;
     currentCursor[1] = 0;
 
     justStartedRolling = false;
+    lastScrollTime = currentScrollTime;
   }
 
 
   if(currentScrollTime - lastScrollTime >= SCROLL_SPEED) {
-    currentCursor[0]--;
-    lcd.setCursor(currentCursor[0], currentCursor[1]);
+    scrollCursorX--;
 
-    lcd.clear();
-    lcd.print(message);
+    int len = message.length();
+
+    if (scrollCursorX + len < 0) {
+      scrollCursorX = LCD_WIDTH;
+    }    String displayStr = "";
+
+    lcd.setCursor(0, 0);
+    
+    for (int i = 0; i < LCD_WIDTH; i++) {
+      int charIndex = i - scrollCursorX;
+      
+      // Se l'indice corrisponde a un carattere valido della stringa, lo stampa
+      if (charIndex >= 0 && charIndex < len) {
+        lcd.print(message[charIndex]);
+      } else {
+        // Altrimenti stampa uno spazio vuoto per pulire lo schermo in movimento
+        lcd.print(' ');
+      }
+    }
+
+    lastScrollTime = currentScrollTime;
   }
-  
-  lastScrollTime = currentScrollTime;
 }
 
 
