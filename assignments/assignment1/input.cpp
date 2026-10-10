@@ -4,6 +4,9 @@
 #include "config.h"
 #include "core.h"
 
+#define EI_NOTEXTERNAL
+#include "EnableInterrupt.h"
+
 #define DEBOUNCE_TIME 100 //ms
 
 bool buttonsPressed[NUMBER_OF_PLAYERS] = {false, false};
@@ -29,9 +32,9 @@ void leds_init(short redPin, short greenPin) {
   pinMode(greenPin, OUTPUT);
 }
 
-void buttons_init(short pin) {
+void buttons_init(short pin, short playerIndex) {
   pinMode(pin, INPUT);
-  attachInterrupt(digitalPinToInterrupt(pin), button_handlers[pin-1], RISING);
+  enableInterrupt(pin, button_handlers[playerIndex], RISING);
 }
 
 bool read_digital(short fromPin) {
@@ -48,7 +51,7 @@ void input_init(Player players[NUMBER_OF_PLAYERS]) {
 
   for(short i = 0; i < NUMBER_OF_PLAYERS; i++) {
     leds_init(players[i].redLedPin, players[i].greenLedPin);
-    buttons_init(players[i].buttonPin);
+    buttons_init(players[i].buttonPin, i);
   }
 }
 
