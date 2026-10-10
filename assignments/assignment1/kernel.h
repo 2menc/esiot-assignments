@@ -17,6 +17,7 @@ void change_state(State newState);
 Context get_current_context();
 long get_current_time_in_state();
 long get_entered_state_time();
+bool just_entered_state();
 
 void LOG(const String& messageAddress);
 
@@ -27,6 +28,6 @@ extern Player players[NUMBER_OF_PLAYERS];
 
 void led_fade(short ledPin, short &currentPulseValue, short &fadeAmount);
 void led_turn_off(short ledPin);
-
+void led_turn_on(short ledPin);
 
 #endif

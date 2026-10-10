@@ -3,11 +3,12 @@
 #include "input.h"
 #include "config.h"
 #include "core.h"
+#include "kernel.h"
 
 #define EI_NOTEXTERNAL
 #include "EnableInterrupt.h"
 
-#define DEBOUNCE_TIME 100 //ms
+#define DEBOUNCE_TIME 220 //ms
 
 bool buttonsPressed[NUMBER_OF_PLAYERS] = {false, false};
 long lastPressedTimes[NUMBER_OF_PLAYERS] = {0, 0};
@@ -66,11 +67,16 @@ void input_reset() {
 
 short get_difficulty() {
   int read = analogRead(POTENTIOMETER_PIN);
-  short mappedReading = map(read, 0, 2^10, 1, 4);
+  short mappedReading = map(read, 0, 1023, 1, 5);
+
+  // LOG("read:" + String(read) + ", mapped: " + mappedReading);
+
   return mappedReading;
 }
 
-
+void button_clear(short buttonIndex) {
+  buttonsPressed[buttonIndex] = false;
+}
 
 
 

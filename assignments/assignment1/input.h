@@ -9,6 +9,7 @@ extern long lastPressedTimes[NUMBER_OF_PLAYERS];
 void input_init(Player players[NUMBER_OF_PLAYERS]);
 bool is_button_pressed(short buttonIndex);
 void input_reset();
+void button_clear(short buttonIndex);
 
 void button_handler(short index);
 short get_difficulty();

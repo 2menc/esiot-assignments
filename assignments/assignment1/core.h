@@ -5,9 +5,12 @@
 
 #define NUMBER_OF_PLAYERS 2
 
-#define WAITING_TIMEOUT 10000 //ms
+#define WAITING_TIMEOUT 5000 //ms
+
+#define MAX_NUMBER 3
 
 const String MESSAGE_WAITING = "Welcome to React! Game. Press Buttons To Start";
+const String MESSAGE_GO = "GO!";
 
 typedef enum {
   STATE_WAITING_FOR_PLAYERS,
@@ -16,6 +19,12 @@ typedef enum {
   STATE_END_ROUND,
   STATE_END_GAME
 } State;
+
+typedef enum {
+  WIN_TIE,
+  WIN_WIN
+
+} WIN_TYPE;
 
 typedef enum {
   EVENT_NONE,
@@ -29,6 +38,8 @@ typedef struct {
   short greenLedPin;
   short redLedPin;
   short buttonPin;
+
+  short timesPressed;
 } Player;
 
 typedef struct {
@@ -47,14 +58,15 @@ typedef struct {
 
 void core_init();
 
-void handle_current_state(Context currentContext);
+void handle_current_state(Context &currentContext);
 void handle_event(Event occuredEvent);
 
-void handle_state_waitingForPlayers(Context ctx);
+void handle_state_waitingForPlayers(Context &ctx);
 void handle_state_sleep(Context ctx);
-void handle_state_play(Context ctx);
-void handle_state_endRound(Context ctx);
-void handle_state_endGame(Context ctx);
+void handle_state_play(Context &ctx);
+void handle_state_endRound(Context &ctx);
+void handle_state_endGame(Context &ctx);
 
+uint8_t get_random_number();
 
 #endif

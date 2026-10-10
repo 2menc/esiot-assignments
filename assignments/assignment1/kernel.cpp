@@ -8,6 +8,7 @@
 Player player_create(short playerNumber);
 
 Context currentContext;
+bool firstCheckInState; 
 
 /* init should initialize the necessary structures to store players and context data*/
 void kernel_init() {
@@ -26,9 +27,16 @@ void kernel_init() {
   lcd_init();
 }
 
+bool just_entered_state(){
+  bool com = firstCheckInState;
+  firstCheckInState = false;
+  return com;
+}
+
 void change_state(State newState) {
   currentContext.currentState = newState;
   currentContext.timeEnteredInState = millis();
+  firstCheckInState = true;
 }
 
 Context get_current_context() {
@@ -44,8 +52,10 @@ long get_entered_state_time() {
 }
 
 void LOG(const String& messageAddress) {
-  short cursor[2] = {0, 0};
-  display(messageAddress, cursor, DISPLAY_STATIC);
+  /*short cursorCenter[2] = {LCD_WIDTH/2 -(messageAddress.length() / 2), 0};
+  display(messageAddress, cursorCenter, DISPLAY_STATIC);*/
+
+  Serial.println(messageAddress);
 }
 
 
@@ -55,6 +65,7 @@ Player player_create(short playerNumber) {
   Player player;
 
   player.score = 0;
+  player.timesPressed = 0;
   player.playerNumber = playerNumber;
 
   assign_pins_to_player(player);
@@ -78,6 +89,9 @@ void led_turn_off(short ledPin) {
   digitalWrite(ledPin, LOW);
 }
 
+void led_turn_on(short ledPin) {
+  digitalWrite(ledPin, HIGH);
+}
 
 
 

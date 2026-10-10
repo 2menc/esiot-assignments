@@ -1,7 +1,9 @@
 #include "view.h"
+#include "input.h"
 
 void display_static(String message, short cursor[2]);
 void display_rolling(String message);
+void display_infos(String message, short cursor[2]);
 
 long lastScrollTime;
 bool justStartedRolling = false;
@@ -26,6 +28,11 @@ void display(String message, short cursor[2], DISPLAY_MODE mode) {
 
     case DISPLAY_ROLLING: {
       display_rolling(message);
+      break;
+    }
+
+    case DISPLAY_INFORMATIONS: {
+      display_infos(message, cursor);
       break;
     }
 
@@ -80,6 +87,18 @@ void display_rolling(String message) {
 
     lastScrollTime = currentScrollTime;
   }
+}
+
+void display_infos(String message, short cursor[2]) {
+  lcd.clear();
+
+ String m = "diff:" + String(get_difficulty());
+  short cursorDifficulty[2] = {LCD_WIDTH/2 - (m.length()/2), 1};
+  lcd.setCursor(cursorDifficulty[0], cursorDifficulty[1]);
+  lcd.print(m);
+
+  lcd.setCursor(cursor[0], cursor[1]);
+  lcd.print(message);
 }
 
 void lcd_clear() {

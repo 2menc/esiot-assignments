@@ -7,7 +7,17 @@
 #define DEFAULT_BAUD_RATE 9600
 #define FADE_FREQUENCY 25  //ms
 
-void handle_current_state(Context currentContext) {
+short lastWinPlayer = -1;
+uint8_t roundCounter;
+
+unsigned int current_T1 = 10000;
+unsigned int calculate_random_time(unsigned int previousTime);
+void fault(Player &player);
+void reset_presses(Context &ctx);
+void score_increase(Player &player);
+uint16_t calculate_next_T1(uint16_t previous_T1, uint8_t roundCounter);
+
+void handle_current_state(Context &currentContext) {
 
   switch (currentContext.currentState) {
     case STATE_WAITING_FOR_PLAYERS: handle_state_waitingForPlayers(currentContext); break;
@@ -38,7 +48,7 @@ void core_init() {
 }
 
 unsigned long timeLastFade;
-void handle_state_waitingForPlayers(Context ctx) {
+void handle_state_waitingForPlayers(Context &ctx) {
   /*
   all green leds should be off and all red led should be pulsing 
   (fading in and out, when R1 is fading in, R2 should be fading out), 
@@ -46,11 +56,11 @@ void handle_state_waitingForPlayers(Context ctx) {
   */
 
   //LOG("WAITING FOR PLAYERS");
-  short cursor[2] = { 0, 0 };
-  display(MESSAGE_WAITING, cursor, DISPLAY_ROLLING);
 
   static short currentFade[2] = { 0, 255 };
   static short fadeStep[2] = { 5, -5 };
+
+  roundCounter = 0;
 
   // turns off all green leds
   for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
@@ -65,7 +75,9 @@ void handle_state_waitingForPlayers(Context ctx) {
     }
   }
 
-  //TODO: LCD
+  // LCD
+  short cursor[2] = { 0, 0 };
+  display(MESSAGE_WAITING, cursor, DISPLAY_ROLLING);
 
 
   // wait for both buttons
@@ -75,6 +87,9 @@ void handle_state_waitingForPlayers(Context ctx) {
       allPressed = false;
       break;
     }
+  }
+  if(allPressed) {
+    change_state(STATE_PLAY);
   }
 
   // checks if time ran out
@@ -87,7 +102,9 @@ void handle_state_waitingForPlayers(Context ctx) {
 
 void handle_state_sleep(Context ctx) {
 
-  LOG("SLEEP");
+  short cursorCenterSleep[2] = {LCD_WIDTH/2 - 2, 0};
+
+  display("SLEEP", cursorCenterSleep, DISPLAY_STATIC);
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
   sleep_mode();
@@ -95,11 +112,195 @@ void handle_state_sleep(Context ctx) {
   //first thing: wake
   sleep_disable();
 
-  LOG("WOKE UP");
+  short cursorCenterWake[2] = {LCD_WIDTH/2 - 3, 0};
+
+  display("WOKE UP", cursorCenterWake, DISPLAY_STATIC);
   delay(700);
   change_state(STATE_WAITING_FOR_PLAYERS);
 }
 
-void handle_state_play(Context ctx) {}
-void handle_state_endRound(Context ctx) {}
-void handle_state_endGame(Context ctx) {}
+static unsigned long T1 = 10000;           
+static bool numberShown = false;
+static unsigned long phaseStartTime = 0;
+static unsigned long randomWaitTime = 0;
+static uint8_t currentNumber = 0;
+void handle_state_play(Context &ctx) {
+
+  short cursorCenter[2] = {LCD_WIDTH/2 -1, 0};
+
+  /*
+    the leds are turned off and the LCD gets cleared. 
+  */
+  if (just_entered_state()) {
+    for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+      led_turn_off(ctx.players[i].redLedPin);
+      led_turn_off(ctx.players[i].greenLedPin);
+    }
+    roundCounter = 0;
+    display(MESSAGE_GO, cursorCenter, DISPLAY_STATIC);
+    delay(1000);
+    lcd_clear();
+    input_reset();
+
+    numberShown = false;
+    phaseStartTime = millis();
+
+    randomWaitTime = random(1000, WAITING_TIMEOUT);
+    T1 = calculate_next_T1(current_T1, roundCounter);
+    currentNumber = get_random_number();
+
+    return;
+  }
+
+  /*
+    checks for fault
+  */
+  if (!numberShown) {
+
+    for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+      if (is_button_pressed(i)) {
+        fault(ctx.players[i]);
+
+        change_state(STATE_END_ROUND);
+
+        return;
+      }
+    }  
+
+  /*
+    After a random amt. of time 0 < t < MAX_WAIT ms, the number is shown;
+  */
+  if (millis() - phaseStartTime >= randomWaitTime) {
+      numberShown = true;
+      phaseStartTime = millis(); 
+
+      input_reset();
+
+      LOG("current T1 :" + String(current_T1));
+      display(String(currentNumber), cursorCenter, DISPLAY_INFORMATIONS);
+    }
+    return;
+  }
+
+  /*
+    checks times pressed
+  */
+  for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    if(is_button_pressed(i)) {
+      button_clear(i);
+
+      ctx.players[i].timesPressed++;
+
+      if(ctx.players[i].timesPressed == currentNumber) {
+        
+        lastWinPlayer = i;
+        change_state(STATE_END_ROUND);
+        return;
+      }
+    }
+  }
+
+  /*
+    wait for players
+  */
+  if (millis() - phaseStartTime > T1) {
+    change_state(STATE_END_GAME);
+    return;
+  }
+}
+
+void handle_state_endRound(Context &ctx) {
+  reset_presses(ctx);
+
+  if (lastWinPlayer >= 0) {            
+    short winner = lastWinPlayer;
+    lastWinPlayer = -1;
+    score_increase(ctx.players[winner]);
+
+    String scores = "P1:" + String(ctx.players[0].score) + " P2:" + String(ctx.players[1].score);
+    short cursor[2] = {LCD_WIDTH/2 - (scores.length() / 2), 1};
+    display(scores, cursor, DISPLAY_STATIC);
+
+    led_turn_on(ctx.players[winner].greenLedPin);
+    delay(2000);
+    led_turn_off(ctx.players[winner].greenLedPin);
+  }
+
+  change_state(STATE_PLAY);
+}
+
+void handle_state_endGame(Context &ctx) {
+  if (just_entered_state()) LOG("GAME OVER");   
+}
+
+
+uint16_t calculate_next_T1(uint16_t previous_T1, uint8_t roundCounter) {
+
+  float divisionFactor = 1.1 + (get_difficulty() * roundCounter);
+  unsigned long new_T1 = previous_T1 / divisionFactor;
+
+  if (new_T1 < 300) {
+      new_T1 = 300; 
+  }
+
+  return new_T1;
+}
+
+uint8_t get_random_number() {
+  return (random() % MAX_NUMBER) + 1;
+}
+
+void fault(Player &player) {
+
+  led_turn_on(player.redLedPin);
+  
+  if(player.score > 0) {
+    player.score--;
+  } else {
+    change_state(STATE_END_GAME);
+  }
+  
+  delay(2000);
+
+  led_turn_off(player.redLedPin);
+}
+
+void reset_presses(Context &ctx) {
+  for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    ctx.players[i].timesPressed = 0;
+  }
+}
+
+/*
+  automatically increases the score of player(s) who won
+*/
+/*
+short search_winner(Context ctx) {
+  short best = 0;
+
+  // searches the best score
+  for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    if(ctx.players[i].score >= best) {
+      best = ctx.players[i].score;
+    }
+  }
+
+
+  // increases player's score
+  for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    if(ctx.players[i].score == best) {
+      return i;
+    }
+  }
+}
+*/
+
+void score_increase(Player &player) {
+  player.score++;
+}
+
+
+
+
+
+
