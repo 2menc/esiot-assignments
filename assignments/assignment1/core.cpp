@@ -43,6 +43,8 @@ void handle_state_waitingForPlayers(Context ctx) {
   waiting for players to start the game;
   */
 
+  LOG("WAITING FOR PLAYERS");
+
   static int currentFade[2] = {0, 255};
   static short fadeStep[2] = {5, -5};
 
@@ -80,7 +82,8 @@ void handle_state_waitingForPlayers(Context ctx) {
 }
 
 void handle_state_sleep(Context ctx) {
-  
+
+  LOG("SLEEP");  
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_mode();
 

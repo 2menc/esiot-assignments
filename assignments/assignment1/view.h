@@ -7,7 +7,7 @@
 #define LCD_WIDTH 16
 #define LCD_HEIGHT 2
 
-#define SCROLL_SPEED 70 //ms
+#define SCROLL_SPEED 300 //ms
 
 extern LiquidCrystal_I2C lcd;
 

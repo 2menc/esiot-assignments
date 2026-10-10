@@ -36,6 +36,7 @@ void display(String message, short cursor[2], DISPLAY_MODE mode) {
 
 void display_static(String message, short cursor[2]) {
   lcd.setCursor(cursor[0], cursor[1]);
+  lcd.clear();
   lcd.print(message);
 }
 
@@ -56,6 +57,7 @@ void display_rolling(String message) {
     currentCursor[0]--;
     lcd.setCursor(currentCursor[0], currentCursor[1]);
 
+    lcd.clear();
     lcd.print(message);
   }
   
