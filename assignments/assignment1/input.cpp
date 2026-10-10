@@ -8,7 +8,7 @@
 #define EI_NOTEXTERNAL
 #include "EnableInterrupt.h"
 
-#define DEBOUNCE_TIME 220 //ms
+#define DEBOUNCE_TIME 180 //ms
 
 bool buttonsPressed[NUMBER_OF_PLAYERS] = {false, false};
 long lastPressedTimes[NUMBER_OF_PLAYERS] = {0, 0};

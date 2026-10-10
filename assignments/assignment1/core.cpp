@@ -10,12 +10,12 @@
 short lastWinPlayer = -1;
 uint8_t roundCounter;
 
-unsigned int current_T1 = 10000;
 unsigned int calculate_random_time(unsigned int previousTime);
-void fault(Player &player);
+void fault(Context &ctx, short playerIndex);
 void reset_presses(Context &ctx);
 void score_increase(Player &player);
 uint16_t calculate_next_T1(uint16_t previous_T1, uint8_t roundCounter);
+void show_scores(Context ctx);
 
 void handle_current_state(Context &currentContext) {
 
@@ -146,7 +146,7 @@ void handle_state_play(Context &ctx) {
     phaseStartTime = millis();
 
     randomWaitTime = random(1000, WAITING_TIMEOUT);
-    T1 = calculate_next_T1(current_T1, roundCounter);
+    T1 = calculate_next_T1(T1, roundCounter);
     currentNumber = get_random_number();
 
     return;
@@ -159,7 +159,7 @@ void handle_state_play(Context &ctx) {
 
     for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
       if (is_button_pressed(i)) {
-        fault(ctx.players[i]);
+        fault(ctx, i);
 
         change_state(STATE_END_ROUND);
 
@@ -176,7 +176,7 @@ void handle_state_play(Context &ctx) {
 
       input_reset();
 
-      LOG("current T1 :" + String(current_T1));
+      LOG("current T1 :" + String(T1));
       display(String(currentNumber), cursorCenter, DISPLAY_INFORMATIONS);
     }
     return;
@@ -217,9 +217,7 @@ void handle_state_endRound(Context &ctx) {
     lastWinPlayer = -1;
     score_increase(ctx.players[winner]);
 
-    String scores = "P1:" + String(ctx.players[0].score) + " P2:" + String(ctx.players[1].score);
-    short cursor[2] = {LCD_WIDTH/2 - (scores.length() / 2), 1};
-    display(scores, cursor, DISPLAY_STATIC);
+    show_scores(ctx);
 
     led_turn_on(ctx.players[winner].greenLedPin);
     delay(2000);
@@ -233,10 +231,15 @@ void handle_state_endGame(Context &ctx) {
   if (just_entered_state()) LOG("GAME OVER");   
 }
 
+void show_scores(Context ctx) {
+  String scores = "P1:" + String(ctx.players[0].score) + " P2:" + String(ctx.players[1].score);
+  short cursor[2] = { LCD_WIDTH/2 - (short)(scores.length() / 2), 1 };
+  display(scores, cursor, DISPLAY_STATIC);
+}
 
 uint16_t calculate_next_T1(uint16_t previous_T1, uint8_t roundCounter) {
 
-  float divisionFactor = 1.1 + (get_difficulty() * roundCounter);
+  float divisionFactor = 1.5 + (get_difficulty()* 4 * roundCounter);
   unsigned long new_T1 = previous_T1 / divisionFactor;
 
   if (new_T1 < 300) {
@@ -250,19 +253,22 @@ uint8_t get_random_number() {
   return (random() % MAX_NUMBER) + 1;
 }
 
-void fault(Player &player) {
+void fault(Context &ctx, short playerIndex) {
 
-  led_turn_on(player.redLedPin);
+  led_turn_on(ctx.players[playerIndex].redLedPin);
   
-  if(player.score > 0) {
-    player.score--;
+
+  if(ctx.players[playerIndex].score > 0) {
+    ctx.players[playerIndex].score--;
   } else {
     change_state(STATE_END_GAME);
   }
   
+  show_scores(ctx);
+
   delay(2000);
 
-  led_turn_off(player.redLedPin);
+  led_turn_off(ctx.players[playerIndex].redLedPin);
 }
 
 void reset_presses(Context &ctx) {
