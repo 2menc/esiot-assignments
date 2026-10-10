@@ -6,7 +6,7 @@
 extern bool buttonsPressed[NUMBER_OF_PLAYERS];
 extern long lastPressedTimes[NUMBER_OF_PLAYERS];
 
-void input_init();
+void input_init(Player players[NUMBER_OF_PLAYERS]);
 bool is_button_pressed(short buttonIndex);
 void input_reset();
 

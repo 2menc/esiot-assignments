@@ -90,8 +90,8 @@ void handle_state_sleep(Context ctx) {
   change_state(STATE_WAITING_FOR_PLAYERS);
 }
 
-void handle_state_play(Context ctx);
-void handle_state_endRound(Context ctx);
-void handle_state_endGame(Context ctx);
+void handle_state_play(Context ctx) {}
+void handle_state_endRound(Context ctx) {}
+void handle_state_endGame(Context ctx) {}
 
 

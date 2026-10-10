@@ -3,6 +3,7 @@
 #include "config.h"
 #include "core.h"
 #include "input.h"
+#include "view.h"
 
 Player player_create(short playerNumber);
 
@@ -20,6 +21,9 @@ void kernel_init() {
   currentContext.currentState = STATE_WAITING_FOR_PLAYERS;
   currentContext.difficulty = get_difficulty();
   currentContext.timeEnteredInState = millis();
+
+  // LCD
+  lcd_init();
 }
 
 void change_state(State newState) {
@@ -40,7 +44,8 @@ long get_entered_state_time() {
 }
 
 void LOG(const String& messageAddress) {
-  // TODO: log to LCD
+  short cursor[2] = {0, 0};
+  display(messageAddress, cursor, DISPLAY_STATIC);
 }
 
 

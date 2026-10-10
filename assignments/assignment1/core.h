@@ -45,7 +45,7 @@ typedef struct {
 
 void core_init();
 
-void handle_current_state(State currentState);
+void handle_current_state(Context currentContext);
 void handle_event(Event occuredEvent);
 
 void handle_state_waitingForPlayers(Context ctx);
