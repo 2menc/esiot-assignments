@@ -10,11 +10,13 @@ void assign_pins_to_player(Player &player) {
       player.buttonPin = PIN_BUTTON_ONE;
       player.greenLedPin = PIN_LED_GREEN_ONE;
       player.redLedPin = PIN_LED_RED_ONE;
+      break;
     }
     case 2: {
       player.buttonPin = PIN_BUTTON_TWO;
       player.greenLedPin = PIN_LED_GREEN_TWO;
       player.redLedPin = PIN_LED_RED_TWO;
+      break;
     }
     default: return;
   }

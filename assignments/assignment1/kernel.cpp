@@ -27,8 +27,8 @@ void change_state(State newState) {
   currentContext.timeEnteredInState = millis();
 }
 
-State get_current_state() {
-  return currentContext.currentState;
+Context get_current_context() {
+  return currentContext;
 }
 
 long get_current_time_in_state() {
@@ -49,9 +49,10 @@ void LOG(const String& messageAddress) {
 Player player_create(short playerNumber) {
   Player player;
 
-  player.playerNumber = playerNumber;
-  assign_pins_to_player(player);
   player.score = 0;
+  player.playerNumber = playerNumber;
+
+  assign_pins_to_player(player);
 
   return player;
 }

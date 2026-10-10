@@ -6,12 +6,15 @@
 
 #include "Arduino.h" 
 #include "core.h"
+#include "config.h"
+
+extern Context currentContext;
 
 /* init should initialize the necessary structures to store players and context data*/
 void kernel_init(); // no free: not necesary because of the gameloop
 
 void change_state(State newState);
-State get_current_state();
+Context get_current_context();
 long get_current_time_in_state();
 long get_entered_state_time();
 
