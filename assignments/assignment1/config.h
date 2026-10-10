@@ -13,10 +13,10 @@
  Both buttons will be on pin 1 and 2, in order to send interrupts
 */
 #define PIN_LED_GREEN_ONE 9
-#define PIN_LED_RED_ONE 9
+#define PIN_LED_RED_ONE 10
 
-#define PIN_LED_GREEN_TWO 9
-#define PIN_LED_RED_TWO 10
+#define PIN_LED_GREEN_TWO 11
+#define PIN_LED_RED_TWO 12
 
 #include "core.h"
 
