@@ -62,9 +62,11 @@ Player player_create(short playerNumber) {
   return player;
 }
 
-void led_fade(short ledPin, int &currentPulseValue, short &fadeAmount) {
+void led_fade(short ledPin, short &currentPulseValue, short &fadeAmount) {
 
-  if(currentPulseValue + fadeAmount > 255 || currentPulseValue - fadeAmount < 0) {
+  int nextValue = currentPulseValue + fadeAmount;
+
+  if (nextValue > 255 || nextValue < 0) {    
     fadeAmount = -fadeAmount;
   } 
 

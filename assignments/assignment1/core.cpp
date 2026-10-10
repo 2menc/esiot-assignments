@@ -5,7 +5,7 @@
 #include "view.h"
 
 #define DEFAULT_BAUD_RATE 9600
-#define FADE_FREQUENCY 50  //ms
+#define FADE_FREQUENCY 25  //ms
 
 void handle_current_state(Context currentContext) {
 
@@ -49,7 +49,7 @@ void handle_state_waitingForPlayers(Context ctx) {
   short cursor[2] = { 0, 0 };
   display(MESSAGE_WAITING, cursor, DISPLAY_ROLLING);
 
-  static int currentFade[2] = { 0, 255 };
+  static short currentFade[2] = { 0, 255 };
   static short fadeStep[2] = { 5, -5 };
 
   // turns off all green leds

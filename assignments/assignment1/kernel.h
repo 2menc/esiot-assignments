@@ -25,7 +25,7 @@ extern Context currentContext;
 extern Player players[NUMBER_OF_PLAYERS];
 
 
-void led_fade(short ledPin, int &currentPulseValue, short &fadeAmount);
+void led_fade(short ledPin, short &currentPulseValue, short &fadeAmount);
 void led_turn_off(short ledPin);
 
 
