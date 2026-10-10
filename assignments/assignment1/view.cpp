@@ -35,8 +35,8 @@ void display(String message, short cursor[2], DISPLAY_MODE mode) {
 }
 
 void display_static(String message, short cursor[2]) {
-  lcd.setCursor(cursor[0], cursor[1]);
   lcd.clear();
+  lcd.setCursor(cursor[0], cursor[1]);
   lcd.print(message);
 }
 
@@ -65,7 +65,7 @@ void display_rolling(String message) {
     }    String displayStr = "";
 
     lcd.setCursor(0, 0);
-    
+
     for (int i = 0; i < LCD_WIDTH; i++) {
       int charIndex = i - scrollCursorX;
       
@@ -82,6 +82,9 @@ void display_rolling(String message) {
   }
 }
 
+void lcd_clear() {
+  lcd.clear();
+}
 
 
 

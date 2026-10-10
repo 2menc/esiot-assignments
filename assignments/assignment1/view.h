@@ -19,5 +19,6 @@ typedef enum {
 LiquidCrystal_I2C lcd_init();
 
 void display(String message, short cursor[2], DISPLAY_MODE mode);
+void lcd_clear();
 
 #endif
