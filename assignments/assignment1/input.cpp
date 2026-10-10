@@ -57,7 +57,7 @@ void input_reset() {
 
   for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
     buttonsPressed[i] = false;
-    lastPressedTimes[i] = timeStamp;
+    lastPressedTimes[i] = timeStamp - DEBOUNCE_TIME;
   }
 }
 
