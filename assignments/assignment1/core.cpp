@@ -7,6 +7,9 @@
 #define DEFAULT_BAUD_RATE 9600
 #define FADE_FREQUENCY 25  //ms
 
+#define T1_START 5000
+#define T1_MIN 600  
+
 short lastWinPlayer = -1;
 uint8_t roundCounter;
 
@@ -15,7 +18,8 @@ void fault(Context &ctx, short playerIndex);
 void reset_presses(Context &ctx);
 void score_increase(Player &player);
 uint16_t calculate_next_T1(uint16_t previous_T1, uint8_t roundCounter);
-void show_scores(Context ctx);
+void show_scores(Context &ctx);
+short search_winner(Context &ctx);
 
 void handle_current_state(Context &currentContext) {
 
@@ -136,7 +140,7 @@ void handle_state_play(Context &ctx) {
       led_turn_off(ctx.players[i].redLedPin);
       led_turn_off(ctx.players[i].greenLedPin);
     }
-    roundCounter = 0;
+    roundCounter++;
     display(MESSAGE_GO, cursorCenter, DISPLAY_STATIC);
     delay(1000);
     lcd_clear();
@@ -228,10 +232,27 @@ void handle_state_endRound(Context &ctx) {
 }
 
 void handle_state_endGame(Context &ctx) {
-  if (just_entered_state()) LOG("GAME OVER");   
+  if (just_entered_state()) {
+
+    short winner = search_winner(ctx);
+
+    lcd_clear();
+    unsigned long startTime = millis();
+    while(millis() - startTime <= 10000) {
+      if(winner == -1) {
+        //short cursorCenterTie[2] = {LCD_WIDTH/2 - (MESSAGE_TIE.length()/2), 0};
+        display(MESSAGE_TIE, NULL, DISPLAY_ROLLING);
+      } else {
+        //short cursorCenterWin[2] = {LCD_WIDTH/2 - (MESSAGE_WINNER.length()/2), 0};
+        display(MESSAGE_WINNER + "P" + String(ctx.players[winner].playerNumber) , NULL, DISPLAY_ROLLING);
+      }
+    }
+  } 
+
+  change_state(STATE_WAITING_FOR_PLAYERS);
 }
 
-void show_scores(Context ctx) {
+void show_scores(Context &ctx) {
   String scores = "P1:" + String(ctx.players[0].score) + " P2:" + String(ctx.players[1].score);
   short cursor[2] = { LCD_WIDTH/2 - (short)(scores.length() / 2), 1 };
   display(scores, cursor, DISPLAY_STATIC);
@@ -239,14 +260,10 @@ void show_scores(Context ctx) {
 
 uint16_t calculate_next_T1(uint16_t previous_T1, uint8_t roundCounter) {
 
-  float divisionFactor = 1.5 + (get_difficulty()* 4 * roundCounter);
+  float divisionFactor = 1.05 + 0.05 * get_difficulty();  
   unsigned long new_T1 = previous_T1 / divisionFactor;
 
-  if (new_T1 < 300) {
-      new_T1 = 300; 
-  }
-
-  return new_T1;
+  return (new_T1 < T1_MIN) ? T1_MIN : new_T1;
 }
 
 uint8_t get_random_number() {
@@ -278,28 +295,25 @@ void reset_presses(Context &ctx) {
 }
 
 /*
-  automatically increases the score of player(s) who won
+  -1 = tie
 */
-/*
-short search_winner(Context ctx) {
-  short best = 0;
+short search_winner(Context &ctx) {   
+  short best = ctx.players[0].score;
+  short winner = 0;
+  bool tie = false;
 
-  // searches the best score
-  for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-    if(ctx.players[i].score >= best) {
+  for (int i = 1; i < NUMBER_OF_PLAYERS; i++) {
+    if (ctx.players[i].score > best) {
       best = ctx.players[i].score;
+      winner = i;
+      tie = false;
+    } else if (ctx.players[i].score == best) {
+      tie = true;
     }
   }
-
-
-  // increases player's score
-  for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-    if(ctx.players[i].score == best) {
-      return i;
-    }
-  }
+  return tie ? -1 : winner;
 }
-*/
+
 
 void score_increase(Player &player) {
   player.score++;

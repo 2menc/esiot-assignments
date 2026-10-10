@@ -11,6 +11,8 @@
 
 const String MESSAGE_WAITING = "Welcome to React! Game. Press Buttons To Start";
 const String MESSAGE_GO = "GO!";
+const String MESSAGE_TIE = "Game Over - Tie";
+const String MESSAGE_WINNER = "Game Over - The winner is ";
 
 typedef enum {
   STATE_WAITING_FOR_PLAYERS,
@@ -19,12 +21,6 @@ typedef enum {
   STATE_END_ROUND,
   STATE_END_GAME
 } State;
-
-typedef enum {
-  WIN_TIE,
-  WIN_WIN
-
-} WIN_TYPE;
 
 typedef enum {
   EVENT_NONE,
