@@ -5,7 +5,7 @@
 
 #define NUMBER_OF_PLAYERS 2
 
-#define WAITING_TIMEOUT 5000 //ms
+#define WAITING_TIMEOUT 10000 //ms
 
 #define MAX_NUMBER 3
 
