@@ -13,7 +13,6 @@
 short lastWinPlayer = -1;
 uint8_t roundCounter;
 
-unsigned int calculate_random_time(unsigned int previousTime);
 void fault(Context &ctx, short playerIndex);
 void reset_presses(Context &ctx);
 void score_increase(Player &player);
@@ -104,7 +103,11 @@ void handle_state_waitingForPlayers(Context &ctx) {
   }
 }
 
-void handle_state_sleep(Context ctx) {
+void handle_state_sleep(Context &ctx) {
+
+  for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    led_turn_off(ctx.players[i].redLedPin);
+  }
 
   short cursorCenterSleep[2] = {LCD_WIDTH/2 - 2, 0};
 
@@ -128,7 +131,9 @@ static bool numberShown = false;
 static unsigned long phaseStartTime = 0;
 static unsigned long randomWaitTime = 0;
 static uint8_t currentNumber = 0;
+static long reachedAt[NUMBER_OF_PLAYERS];   
 void handle_state_play(Context &ctx) {
+
 
   short cursorCenter[2] = {LCD_WIDTH/2 -1, 0};
 
@@ -149,10 +154,12 @@ void handle_state_play(Context &ctx) {
     numberShown = false;
     phaseStartTime = millis();
 
-    randomWaitTime = random(1000, WAITING_TIMEOUT);
-    T1 = calculate_next_T1(T1, roundCounter);
+    randomWaitTime = random(1000, MAX_WAIT);
+    T1 = (roundCounter == 1) ? T1_START : calculate_next_T1(T1, roundCounter);
     currentNumber = get_random_number();
 
+    // resets player response times
+    for (int i = 0; i < NUMBER_OF_PLAYERS; i++) reachedAt[i] = -1;
     return;
   }
 
@@ -160,7 +167,6 @@ void handle_state_play(Context &ctx) {
     checks for fault
   */
   if (!numberShown) {
-
     for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
       if (is_button_pressed(i)) {
         fault(ctx, i);
@@ -187,7 +193,7 @@ void handle_state_play(Context &ctx) {
   }
 
   /*
-    checks times pressed
+    manages buttons
   */
   for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
     if(is_button_pressed(i)) {
@@ -195,21 +201,37 @@ void handle_state_play(Context &ctx) {
 
       ctx.players[i].timesPressed++;
 
-      if(ctx.players[i].timesPressed == currentNumber) {
-        
-        lastWinPlayer = i;
-        change_state(STATE_END_ROUND);
-        return;
+      if(ctx.players[i].timesPressed == currentNumber && reachedAt[i] == -1) {
+        reachedAt[i] = millis();
       }
     }
   }
 
   /*
-    wait for players
+    T1 passed
   */
   if (millis() - phaseStartTime > T1) {
-    change_state(STATE_END_GAME);
-    return;
+    short winner = -1;
+    bool someoneFaulted = false;
+
+    for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+      if (ctx.players[i].timesPressed > currentNumber) {
+        someoneFaulted = true;
+        fault(ctx, i);
+      // player i reached the number && (noone won || the current player was faster than the (current) winner)  
+      } else if(reachedAt[i] >= 0 && (winner < 0 || reachedAt[i] < reachedAt[winner])) { 
+        // then he is the new winner
+        winner = i;
+      }
+    }
+             
+    if (winner < 0 && !someoneFaulted) {  // if no player reached or outcame the specified value
+      change_state(STATE_END_GAME);                           
+    } else {
+      lastWinPlayer = winner;     // there is not a wimnner                   
+      change_state(STATE_END_ROUND);
+    }
+    return;    
   }
 }
 
@@ -248,6 +270,9 @@ void handle_state_endGame(Context &ctx) {
       }
     }
   } 
+
+  for (int i = 0; i < NUMBER_OF_PLAYERS; i++) ctx.players[i].score = 0;
+  input_reset();
 
   change_state(STATE_WAITING_FOR_PLAYERS);
 }
