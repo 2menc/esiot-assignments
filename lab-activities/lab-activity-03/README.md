@@ -1,4 +1,4 @@
-### Embedded Systems and IoT  - ISI LT - a.y. 2025/2026
+### Embedded Systems and IoT - ISI LT - a.y. 2026/2027
 
 ## Lab Activity #03 - 20261007
 
