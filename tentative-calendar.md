@@ -1,7 +1,7 @@
 ### Embedded Systems and IoT - ISI LT - a.y. 2026/2027
 
 # Tentative Calendar
-v1.0.0-20261001
+v1.0.1-20261020
 
 *SEPTEMBER*
 
@@ -34,27 +34,27 @@ Thu 1 - Aula
 
 **== Week #4 - PART 01**
 
-Wed 8 - Lab
+Wed 7 - Lab
 - Lab Activity #03
 - **Assignment 01**
 
-Thu 9 - Aula
+Thu 8 - Aula
 - *work-on assignment 01*
 
 **== Week #5 - PART 01**
 
-Wed 15 - Lab
+Wed 14 - Lab
 - *work-on Assignment 01*
 
-Thu 16 - Aula
+Thu 15 - Aula
 - module-1.3
 
 **== Week #6 - PART 02**
 
-Wed 22 - Lab
+Wed 21 - Lab
 - Lab Activity #04
 
-Thu 23 - Aula
+Thu 22 - Aula
 - module-2.1
 
 **== Week #7 - PART 02**
