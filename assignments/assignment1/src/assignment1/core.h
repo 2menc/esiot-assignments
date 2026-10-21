@@ -23,7 +23,7 @@ typedef enum {
   STATE_END_GAME
 } State;
 
-// 
+// predisposition for FSM
 /*
 typedef enum {
   EVENT_NONE,
@@ -44,7 +44,7 @@ typedef struct {
 
 typedef struct {
   State currentState;
-  Event currentEvent;
+  /*Event currentEvent;*/
   long timeEnteredInState;
 
   short difficulty;

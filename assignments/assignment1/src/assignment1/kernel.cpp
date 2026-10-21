@@ -18,7 +18,7 @@ void kernel_init() {
     currentContext.players[i] = player_create(i+1);
   }
 
-  currentContext.currentEvent = EVENT_NONE;
+  /*currentContext.currentEvent = EVENT_NONE;*/
   currentContext.currentState = STATE_WAITING_FOR_PLAYERS;
   currentContext.difficulty = get_difficulty();
   currentContext.timeEnteredInState = millis();

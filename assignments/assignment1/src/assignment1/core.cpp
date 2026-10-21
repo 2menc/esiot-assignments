@@ -33,6 +33,7 @@ void handle_current_state(Context &currentContext) {
   }
 }
 
+/*
 void handle_event(Context currentContext) {
 
   switch (currentContext.currentEvent) {
@@ -45,6 +46,7 @@ void handle_event(Context currentContext) {
     default: return;
   }
 }
+*/
 
 void core_init() {
   Serial.begin(DEFAULT_BAUD_RATE);
