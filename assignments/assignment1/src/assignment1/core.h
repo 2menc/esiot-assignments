@@ -23,10 +23,13 @@ typedef enum {
   STATE_END_GAME
 } State;
 
+// 
+/*
 typedef enum {
   EVENT_NONE,
   EVENT_BUTTON_PRESSED
 } Event;
+*/
 
 typedef struct {
   short playerNumber;
@@ -56,7 +59,7 @@ typedef struct {
 void core_init();
 
 void handle_current_state(Context &currentContext);
-void handle_event(Event occuredEvent);
+/*void handle_event(Event occuredEvent);*/
 
 /*
   all by reference to save memory
