@@ -1,6 +1,6 @@
 class Instrument {
 public:
-  virtual void play() = 0;
+  virtual void play() = 0;  // = 0: no implementation, abstract
  
 protected:
   void makeSound(String s){
