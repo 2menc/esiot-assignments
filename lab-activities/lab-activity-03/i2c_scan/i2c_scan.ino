@@ -19,7 +19,7 @@ void loop() {
   Serial.println("Scanning...");
 
   nDevices = 0;
-  for (address = 1; address < 127; address++ ) {
+  for (address = 1; address < 127; address++ ) {  // scans all I2C devices addresses till the using one is found
     Wire.beginTransmission(address);
     error = Wire.endTransmission();
 

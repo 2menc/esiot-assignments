@@ -7,6 +7,7 @@ void loop()
 {
   if (Serial.available()){
     char data = Serial.read();
+    delay(100);
     Serial.print(data);
   }  
 }

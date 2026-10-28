@@ -1,0 +1,88 @@
+#include "pins_arduino.h"
+#include "Arduino.h"
+#include "input.h"
+#include "config.h"
+#include "core.h"
+#include "kernel.h"
+
+#define EI_NOTEXTERNAL
+#include "EnableInterrupt.h"
+
+#define DEBOUNCE_TIME 160 //ms
+
+bool buttonsPressed[NUMBER_OF_PLAYERS] = {false, false};
+long lastPressedTimes[NUMBER_OF_PLAYERS] = {0, 0};
+
+void button_handler0(){ button_handler(0); }
+void button_handler1(){ button_handler(1); }
+void (*button_handlers[NUMBER_OF_PLAYERS])() = { button_handler0, button_handler1 };
+void button_handler(short buttonIndex) {
+
+  long timeStamp = millis();
+
+  if(timeStamp - lastPressedTimes[buttonIndex] > DEBOUNCE_TIME) {
+
+    buttonsPressed[buttonIndex] = true;
+    lastPressedTimes[buttonIndex] = timeStamp; 
+  }
+}
+
+void leds_init(short redPin, short greenPin) {
+
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+}
+
+void buttons_init(short pin, short playerIndex) {
+  pinMode(pin, INPUT);
+  enableInterrupt(pin, button_handlers[playerIndex], RISING);
+}
+
+bool read_digital(short fromPin) {
+  int read = digitalRead(fromPin);
+
+  return read > 0;
+}
+
+bool is_button_pressed(short buttonIndex) {
+  return buttonsPressed[buttonIndex];
+}
+
+void input_init(Player players[NUMBER_OF_PLAYERS]) {
+
+  for(short i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    leds_init(players[i].redLedPin, players[i].greenLedPin);
+    buttons_init(players[i].buttonPin, i);
+  }
+}
+
+void input_reset() {
+  long timeStamp = millis();
+
+  for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    buttonsPressed[i] = false;
+    lastPressedTimes[i] = timeStamp - DEBOUNCE_TIME;
+  }
+}
+
+short get_difficulty() {
+  int read = analogRead(POTENTIOMETER_PIN);
+  short mappedReading = map(read, 0, 1023, 1, 5);
+
+  // LOG("read:" + String(read) + ", mapped: " + mappedReading);
+
+  return mappedReading;
+}
+
+void button_clear(short buttonIndex) {
+  buttonsPressed[buttonIndex] = false;
+}
+
+
+
+
+
+
+
+
+
