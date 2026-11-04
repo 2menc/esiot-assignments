@@ -14,17 +14,12 @@ public class TestRemoteBlinking {
 
 	public static void main(String[] args) throws Exception {
 		
-		SerialCommChannel channel = new SerialCommChannel(args[0],9600);		
-		
-		// SerialCommChannel channel = new SerialCommChannel("/dev/tty.usbmodem112401",9600);		
-		
+		SerialCommChannel channel = new SerialCommChannel(args[0],9600);				
 		
 		/* Waiting Arduino rebooting */
 		
 		System.out.println("Waiting Arduino for rebooting...");		
 		Thread.sleep(4000);
-		System.out.println("Ready.");		
-
 		System.out.println("Ready.");		
 
 		
