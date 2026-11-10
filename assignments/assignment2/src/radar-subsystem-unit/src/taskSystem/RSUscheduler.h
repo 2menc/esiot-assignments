@@ -2,9 +2,7 @@
 #define __RSU_SCHEDULER__
 
 #include "tasks/Task.h"
-
-/** Maximum number of tasks the scheduler can hold. */
-#define MAX_TASKS 10
+#include "../config.h"
 
 /**
  * Cooperative scheduler of the Radar Subsystem Unit.

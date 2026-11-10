@@ -1,8 +1,7 @@
 #ifndef __SYSTEM_TYPES__
 #define __SYSTEM_TYPES__
 
-/** Number of sectors the 180 degrees of the horizon are divided into. */
-#define NUM_SECTORS 18
+#include "config.h"
 
 /** States of the Radar Subsystem Unit, shared by tasks and console protocol. */
 enum State {
