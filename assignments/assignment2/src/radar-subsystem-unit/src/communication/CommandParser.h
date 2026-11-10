@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 /** Kinds of command the console can send. */
-enum CommandType {
+enum class CommandType {
   NONE,     /**< invalid or unknown message */
   TAKE,     /**< take remote control of the radar */
   RELEASE,  /**< release remote control */

@@ -4,7 +4,7 @@
 #include "config.h"
 
 /** States of the Radar Subsystem Unit, shared by tasks and console protocol. */
-enum State {
+enum class State {
   IDLE,
   WORKING,
   PRE_ALARM,
@@ -12,7 +12,7 @@ enum State {
 };
 
 /** Who drives the radar position: the scan (auto), the operator (manual) or nobody. */
-enum ControlMode {
+enum class ControlMode {
   AUTO,
   MANUAL,
   NONE

@@ -2,7 +2,7 @@
 #define __RSU_SCHEDULER__
 
 #include "tasks/Task.h"
-#include "../config.h"
+#include "config.h"
 
 /**
  * Cooperative scheduler of the Radar Subsystem Unit.
