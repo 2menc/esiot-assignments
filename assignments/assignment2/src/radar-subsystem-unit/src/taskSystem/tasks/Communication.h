@@ -2,9 +2,9 @@
 #define __COMMUNICATION__
 
 #include "Task.h"
-#include "../SystemTypes.h"
-#include "../../communication/MessageChannel.h"
-#include "../../communication/CommandParser.h"
+#include "SystemTypes.h"
+#include "communication/MessageChannel.h"
+#include "communication/CommandParser.h"
 
 /**
  * Task exchanging data with the console.

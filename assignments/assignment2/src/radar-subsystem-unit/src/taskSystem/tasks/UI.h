@@ -2,9 +2,9 @@
 #define __UI__
 
 #include "Task.h"
-#include "../SystemTypes.h"
-#include "../../devices/Light.h"
-#include "../../devices/Screen.h"
+#include "SystemTypes.h"
+#include "devices/Light.h"
+#include "devices/Screen.h"
 
 /** States of the alarm LED FSM. */
 enum class LedState {

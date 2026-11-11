@@ -2,7 +2,7 @@
 #define __CONTROLLER__
 
 #include "Task.h"
-#include "../SystemTypes.h"
+#include "SystemTypes.h"
 #include "Input.h"
 #include "Radar.h"
 #include "UI.h"

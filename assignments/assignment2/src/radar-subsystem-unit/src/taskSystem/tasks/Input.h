@@ -2,9 +2,9 @@
 #define __INPUT__
 
 #include "Task.h"
-#include "../../devices/Button.h"
-#include "../../devices/AngleSensor.h"
-#include "../../devices/TemperatureSensor.h"
+#include "devices/Button.h"
+#include "devices/AngleSensor.h"
+#include "devices/TemperatureSensor.h"
 #include "config.h"
 
 /** Number of buttons handled by the Input task. */
