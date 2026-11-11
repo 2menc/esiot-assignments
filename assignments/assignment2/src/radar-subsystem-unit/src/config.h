@@ -25,4 +25,11 @@
 
 // LCD
 #define LCD_I2C_ADDRESS 0x27
+
+
+//indexes
+#define INDEX_BUTTON_START 0
+#define INDEX_BUTTON_STOP 1
+#define INDEX_BUTTON_RESET 2
+
 #endif
