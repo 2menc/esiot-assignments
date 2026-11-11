@@ -8,31 +8,106 @@ Radar::Radar(unsigned int period, DistanceSensor* sonar, ServoMotor* servo)
 }
 
 void Radar::init() {
+  this->state = RadarState::STOPPED;
 }
 
 void Radar::tick() {
+
+  switch (this->state)
+  {
+    case RadarState::STOPPED:
+      if(this->controlMode == ControlMode::AUTO) {
+        this->startScan();
+        this->changeState(RadarState::MOVING);
+        this->sector = 0;
+        this->dir = +1;
+      }
+      break;
+    
+    case RadarState::MOVING:
+      this->ticks++;
+      if(this->ticks >= this->currentSpeed) {  //has moved
+        this->enterMeasuring();
+      }
+      break;
+    
+    case RadarState::MEASURING:
+      if(this->controlMode == ControlMode::AUTO) {
+        if(this->sector + this->dir < 0 || this->sector + this->dir >= NUM_SECTORS) {
+          this->dir = -this->dir;
+        }        
+        this->sector += this->dir;
+        this->enterMoving();
+      } else if(this->controlMode == ControlMode::NONE) {
+        this->changeState(RadarState::STOPPED); 
+      } else if(this->controlMode == ControlMode::MANUAL) {
+        this->changeState(RadarState::MANUAL);
+      }
+      break;
+
+    case RadarState::MANUAL:
+      this->servo->moveTo(this->targetAngle);
+
+      if(this->controlMode == ControlMode::AUTO) {
+        this->sector = 0;
+        this->dir = +1;
+        
+        this->enterMoving();
+      } else if(this->controlMode == ControlMode::NONE) {
+        this->changeState(RadarState::STOPPED);
+      }
+
+      break;
+      
+
+  }   
 }
 
 void Radar::setControlMode(ControlMode mode) {
+  this->controlMode = mode;
 }
 
 void Radar::setSpeed(int speed) {
+  this->currentSpeed = speed;
 }
 
 void Radar::setTemperature(float temperature) {
+  this->temperature = temperature;
 }
 
 void Radar::setTargetAngle(int angle) {
+  this->targetAngle = angle;
 }
 
 bool Radar::hasNewMeasure() {
-  return newMeasure;
+  return this->newMeasure;
 }
 
 Measure Radar::getMeasure() {
-  return lastMeasure;
+  this->newMeasure = true;
+  return this->lastMeasure;
 }
 
 int Radar::convertSectorToAngle(int sector) {
-  return 0;
+  return NUM_SECTORS/180 * sector;
+}
+
+void Radar::changeState(RadarState state) {
+  this->state = state;
+}
+
+void Radar::enterMeasuring() {
+  const int d = this->sonar->getDistance(this->temperature);
+
+  this->lastMeasure = {d >= 0, this->sector, d};
+  this->newMeasure = true;
+
+  this->changeState(RadarState::MEASURING);
+}
+
+void Radar::enterMoving() {
+  this->servo->moveTo(this->convertSectorToAngle(this->sector));
+  this->ticks = 0;
+
+  this->changeState(RadarState::MOVING);
 }

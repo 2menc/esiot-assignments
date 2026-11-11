@@ -2,9 +2,9 @@
 #define __RADAR__
 
 #include "Task.h"
-#include "../SystemTypes.h"
-#include "../../devices/DistanceSensor.h"
-#include "../../devices/ServoMotor.h"
+#include "SystemTypes.h"
+#include "devices/DistanceSensor.h"
+#include "devices/ServoMotor.h"
 
 /** States of the Radar task FSM. */
 enum class RadarState {
@@ -26,7 +26,7 @@ private:
 
   RadarState state;          /**< current FSM state */
   int sector;                /**< current sector, from 0 to NUM_SECTORS - 1 */
-  int dir;                   /**< scan direction: +1 forward, -1 backward */
+  short dir;                   /**< scan direction: +1 forward, -1 backward */
   int ticks;                 /**< ticks spent in the current state */
   ControlMode controlMode;   /**< mode set by the Controller */
   float temperature;         /**< temperature used to calibrate the sonar */
@@ -41,6 +41,14 @@ private:
    * @return angle in degrees
    */
   int convertSectorToAngle(int sector);
+
+  /**
+   * changes state
+   */
+  void changeState(RadarState state);
+
+  void enterMeasuring();
+  void enterMoving();
 
 public:
   /**
