@@ -6,8 +6,12 @@ class Button {
 public:
   virtual ~Button() {}
 
-  /** @return true while the button is held down */
-  virtual bool isPressed() = 0;
+  /**
+   * Tells whether the button has been pressed since the last call.
+   * Each press is reported only once.
+   * @return true if a new press has occurred
+   */
+  virtual bool wasPressed() = 0;
 };
 
 #endif
