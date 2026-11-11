@@ -8,7 +8,7 @@ AnalogTemperatureSensor::AnalogTemperatureSensor(short pin) : pin(pin) {
 }
 
 float AnalogTemperatureSensor::getTemperature() {
-  this->convertVtoTemp(this->getTension());
+  return this->convertVtoTemp(this->getTension());
 }
 
 float AnalogTemperatureSensor::getTension() {

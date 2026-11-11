@@ -16,7 +16,7 @@
 #define PIN_TIRGGER 6 // pwm/analog capable
 #define PIN_ECHO 7
 #define PIN_BUTTON_1 8
-#define PIN_BUTTON_2 9
+#define PIN_BUTTON_2 13
 #define PIN_BUTTON_3 12
 #define PIN_SERVO 9 // pwm capable
 

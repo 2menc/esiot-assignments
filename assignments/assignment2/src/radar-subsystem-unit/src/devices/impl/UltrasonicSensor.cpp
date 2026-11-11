@@ -31,5 +31,6 @@ long UltrasonicSensor::readEchoTime() {
     this->isSendingEcho = false;
     return timeEntered - this->lastEcho;
   }
+  return -1;
 }
 
