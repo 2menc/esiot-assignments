@@ -28,7 +28,6 @@ private:
   AngleSensor* pot;                /**< potentiometer for manual control */
   TemperatureSensor* tempSensor;   /**< sensor used to calibrate the sonar */
 
-  bool lastButtons[NUM_BUTTONS];   /**< button states at the previous tick, for click detection */
   ButtonEvent lastEvent;           /**< last click detected, not yet consumed */
   int potAngle;                    /**< last sampled potentiometer angle */
   float temperature;               /**< last sampled temperature */

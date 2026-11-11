@@ -10,32 +10,22 @@ Input::Input(unsigned int period, Button* start, Button* stop, Button* reset,
 }
 
 void Input::init() {
+  // discard presses recorded before the system started
   for (int i = 0; i < NUM_BUTTONS; i++) {
-    this->lastButtons[i] = this->buttons[i]->isPressed();
+    this->buttons[i]->wasPressed();
   }
 }
 
 void Input::tick() {
-  this->temperature = this->tempSensor->getTemperature(); /*temperature*/
-  this->potAngle = this->pot->getAngle(); /*angle*/
+  this->temperature = this->tempSensor->getTemperature();
+  this->potAngle = this->pot->getAngle();
 
-  // last event
-  for(int i = 0; i < NUM_BUTTONS; i++) {
-    this->lastButtons[i] = this->buttons[i]->isPressed();
-  }
-  for(int i = 0; i < NUM_BUTTONS; i++) {
-    if(lastButtons[i]) {
-      switch (i)
-      {
-      case INDEX_BUTTON_START: // start
-        this->lastEvent = ButtonEvent::START;      
-        break;
-      case INDEX_BUTTON_STOP: // stop
-        this->lastEvent = ButtonEvent::STOP;
-        break;
-      case INDEX_BUTTON_RESET: // reset
-        this->lastEvent = ButtonEvent::RESET;
-        break;
+  for (int i = 0; i < NUM_BUTTONS; i++) {
+    if (this->buttons[i]->wasPressed()) {
+      switch (i) {
+        case INDEX_BUTTON_START: this->lastEvent = ButtonEvent::START; break;
+        case INDEX_BUTTON_STOP:  this->lastEvent = ButtonEvent::STOP;  break;
+        case INDEX_BUTTON_RESET: this->lastEvent = ButtonEvent::RESET; break;
       }
     }
   }
