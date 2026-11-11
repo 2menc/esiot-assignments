@@ -13,8 +13,8 @@
 // pins
 #define PIN_TEMPSENSOR A2 // pwm/analog capable
 #define PIN_POTENTIOMETER A3 // pwm/analog capable
-#define PIN_TIRGGER 6 // pwm/analog capable
-#define PIN_ECHO 7
+#define PIN_ECHO 6 // pwm/analog capable
+#define PIN_TIRGGER 7
 #define PIN_BUTTON_1 8
 #define PIN_BUTTON_2 13
 #define PIN_BUTTON_3 12

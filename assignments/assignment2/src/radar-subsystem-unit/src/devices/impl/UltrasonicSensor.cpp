@@ -2,35 +2,29 @@
 #include <Arduino.h>
 
 UltrasonicSensor::UltrasonicSensor(short triggerPin, short echoPin)
-    : triggerPin(triggerPin), echoPin(echoPin), lastEcho(0), isSendingEcho(false) {
-      pinMode(triggerPin, INPUT);
-      pinMode(echoPin, OUTPUT);
+    : triggerPin(triggerPin), echoPin(echoPin) {
+      pinMode(triggerPin, OUTPUT);
+      pinMode(echoPin, INPUT);
 }
 
 int UltrasonicSensor::getDistance(float temperature) {
-  return (SOUND_SPEED * this->readEchoTime() / 2) * 100;  // cm
+  this->sendEcho();
+
+  const long microSeconds = pulseIn(this->echoPin, HIGH, ECHO_TIMEOUT_MICROS);
+  if(microSeconds == 0) {return -1;}
+
+  const float currentSoundSpeed = SOUND_SPEED + SOUND_SPEED_TEMPERATURE_FACTOR * temperature;
+
+  return (int)(microSeconds/MICROS_IN_A_SECOND * currentSoundSpeed / 2 * 100); // cm
 }
 
 void UltrasonicSensor::sendEcho() {
-  analogWrite(echoPin, LOW);
-}
 
-void UltrasonicSensor::endEcho() {
-  analogWrite(echoPin, LOW);
-}
+  digitalWrite(this->triggerPin, LOW);
+  delayMicroseconds(2);
 
-long UltrasonicSensor::readEchoTime() {
-  unsigned long timeEntered = millis();
-
-  if(!this->isSendingEcho) {
-    this->lastEcho = timeEntered;
-    this->sendEcho();
-    this->isSendingEcho = true;
-  } else if(this->isSendingEcho && 
-      timeEntered - this->lastEcho >= ECHO_DELAY) {
-    this->isSendingEcho = false;
-    return timeEntered - this->lastEcho;
-  }
-  return -1;
+  digitalWrite(this->triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(this->triggerPin, LOW);
 }
 

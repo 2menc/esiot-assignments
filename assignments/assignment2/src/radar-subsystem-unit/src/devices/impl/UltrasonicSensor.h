@@ -1,8 +1,11 @@
 #ifndef __ULTRASONIC_SENSOR__
 #define __ULTRASONIC_SENSOR__
 
-#define ECHO_DELAY 10 //ms
-#define SOUND_SPEED 331.4f // ms^-1
+#define SOUND_SPEED 331.45f // ms^-1
+
+#define ECHO_TIMEOUT_MICROS 20000   // ~3.4 m range, within the 50 ms task period
+
+#define MICROS_IN_A_SECOND 1000000.0f
 
 #include "../DistanceSensor.h"
 
@@ -13,20 +16,11 @@ private:
   short triggerPin;  /**< pin sending the pulse */
   short echoPin;     /**< pin receiving the echo */
 
-  unsigned long lastEcho;
-  bool isSendingEcho;
-
-  /** Sends a 10 us pulse on the trigger pin. */
-  void sendEcho();
-
-  /** ends the echo emission */
-  void endEcho();
-
   /**
    * Waits for the echo, with a timeout so the task period is not exceeded.
    * @return echo duration in us, or 0 if no echo arrived
    */
-  long readEchoTime();
+  void sendEcho();
 
 public:
   /**

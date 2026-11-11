@@ -17,10 +17,9 @@ void Radar::tick() {
   {
     case RadarState::STOPPED:
       if(this->controlMode == ControlMode::AUTO) {
-        this->startScan();
-        this->changeState(RadarState::MOVING);
         this->sector = 0;
         this->dir = +1;
+        this->enterMoving();
       }
       break;
     
@@ -46,8 +45,6 @@ void Radar::tick() {
       break;
 
     case RadarState::MANUAL:
-      this->servo->moveTo(this->targetAngle);
-
       if(this->controlMode == ControlMode::AUTO) {
         this->sector = 0;
         this->dir = +1;
@@ -55,11 +52,10 @@ void Radar::tick() {
         this->enterMoving();
       } else if(this->controlMode == ControlMode::NONE) {
         this->changeState(RadarState::STOPPED);
+      } else {
+        this->servo->moveTo(this->targetAngle);
       }
-
       break;
-      
-
   }   
 }
 
@@ -84,12 +80,13 @@ bool Radar::hasNewMeasure() {
 }
 
 Measure Radar::getMeasure() {
-  this->newMeasure = true;
+  this->newMeasure = false;
   return this->lastMeasure;
 }
 
 int Radar::convertSectorToAngle(int sector) {
-  return NUM_SECTORS/180 * sector;
+  const int width = 180 / NUM_SECTORS;
+  return sector * width + width / 2;  // centwr
 }
 
 void Radar::changeState(RadarState state) {

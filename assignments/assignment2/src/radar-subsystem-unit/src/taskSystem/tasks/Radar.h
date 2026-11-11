@@ -44,6 +44,7 @@ private:
 
   /**
    * changes state
+   * @param state state to enter
    */
   void changeState(RadarState state);
 

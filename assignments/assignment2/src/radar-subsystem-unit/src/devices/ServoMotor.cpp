@@ -1,6 +1,7 @@
 #include "ServoMotor.h"
 
 ServoMotor::ServoMotor(short pin) : pin(pin), currentAngle(0) {
+  this->servo.attach(pin);
   pinMode(pin, OUTPUT);
 }
 
