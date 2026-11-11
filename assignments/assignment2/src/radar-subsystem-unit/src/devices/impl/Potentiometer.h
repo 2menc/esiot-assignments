@@ -15,6 +15,12 @@ private:
    */
   int convertVToAngle(float V);
 
+  /**
+   * measures the tension on the pot pin
+   * @return the tension on pot. pin
+   */
+  float measureTension();
+
 public:
   /**
    * Creates the potentiometer on the given pin.

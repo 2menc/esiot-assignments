@@ -11,7 +11,7 @@ bool RSUscheduler::registerTask(Task* task) {
 }
 
 void RSUscheduler::run() {
-  // TODO
+  this->tickAll();
 }
 
 void RSUscheduler::tickAll() {

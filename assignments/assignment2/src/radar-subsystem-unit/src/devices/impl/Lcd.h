@@ -13,6 +13,7 @@ private:
   byte i2cAddress;         /**< I2C address of the display */
   String displayedText;    /**< text currently shown */
   LiquidCrystal_I2C lcd;   /**< underlying LCD driver */
+  String message;
 
 public:
   /**

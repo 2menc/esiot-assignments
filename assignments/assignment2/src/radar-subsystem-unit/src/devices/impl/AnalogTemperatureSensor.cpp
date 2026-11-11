@@ -1,13 +1,23 @@
 #include "AnalogTemperatureSensor.h"
+
 #include <Arduino.h>
+#include "config.h"
 
 AnalogTemperatureSensor::AnalogTemperatureSensor(short pin) : pin(pin) {
+  pinMode(pin, INPUT);
 }
 
 float AnalogTemperatureSensor::getTemperature() {
-  return 0;
+  this->convertVtoTemp(this->getTension());
+}
+
+float AnalogTemperatureSensor::getTension() {
+  const float value = analogRead(this->pin);
+
+  return value * TENSION_MAPPING_FACTOR;
 }
 
 float AnalogTemperatureSensor::convertVtoTemp(float V) {
-  return 0;
+  return V - 0.5f;
 }
+

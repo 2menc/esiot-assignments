@@ -1,12 +1,16 @@
 #ifndef __TACTILE_BUTTON__
 #define __TACTILE_BUTTON__
 
+#define DEBOUNCE_TIME 150 // ms
+
 #include "../Button.h"
 
 /** Tactile push button on a digital pin. */
 class TactileButton : public Button {
 private:
   short pin;  /**< digital input pin */
+
+  unsigned long lastTimePressed;
 
 public:
   /**

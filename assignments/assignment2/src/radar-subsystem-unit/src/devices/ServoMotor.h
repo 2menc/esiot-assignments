@@ -1,6 +1,7 @@
 #ifndef __SERVO_MOTOR__
 #define __SERVO_MOTOR__
 
+#include <Arduino.h>
 #include <Servo.h>
 
 /** Servo motor that rotates the radar over 0..180 degrees. */

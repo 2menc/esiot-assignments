@@ -15,6 +15,12 @@ private:
    */
   float convertVtoTemp(float V);
 
+  /**
+   * Measures the tension on te temp pin
+   * @return voltage measured
+   */
+  float getTension();
+
 public:
   /**
    * Creates the sensor on the given pin.
