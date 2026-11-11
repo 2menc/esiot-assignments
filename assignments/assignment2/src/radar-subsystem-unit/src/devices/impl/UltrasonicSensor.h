@@ -2,6 +2,7 @@
 #define __ULTRASONIC_SENSOR__
 
 #define SOUND_SPEED 331.45f // ms^-1
+#define SOUND_SPEED_TEMPERATURE_FACTOR 0.62f
 
 #define ECHO_TIMEOUT_MICROS 20000   // ~3.4 m range, within the 50 ms task period
 
@@ -16,10 +17,7 @@ private:
   short triggerPin;  /**< pin sending the pulse */
   short echoPin;     /**< pin receiving the echo */
 
-  /**
-   * Waits for the echo, with a timeout so the task period is not exceeded.
-   * @return echo duration in us, or 0 if no echo arrived
-   */
+  /** Sends a 10 us pulse on the trigger pin to start a measure. */
   void sendEcho();
 
 public:
