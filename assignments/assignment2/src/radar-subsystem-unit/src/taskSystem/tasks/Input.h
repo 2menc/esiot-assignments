@@ -42,7 +42,7 @@ public:
    * @param pot potentiometer
    * @param tempSensor temperature sensor
    */
-  Input(int period, Button* start, Button* stop, Button* reset,
+  Input(unsigned int period, Button* start, Button* stop, Button* reset,
         AngleSensor* pot, TemperatureSensor* tempSensor);
 
   void init() override;

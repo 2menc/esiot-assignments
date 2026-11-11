@@ -1,6 +1,6 @@
 #include "Input.h"
 
-Input::Input(int period, Button* start, Button* stop, Button* reset,
+Input::Input(unsigned int period, Button* start, Button* stop, Button* reset,
              AngleSensor* pot, TemperatureSensor* tempSensor)
     : Task(period), pot(pot), tempSensor(tempSensor),
       lastEvent(ButtonEvent::NONE), potAngle(0), temperature(0) {

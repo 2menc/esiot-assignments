@@ -1,6 +1,6 @@
 #include "Radar.h"
 
-Radar::Radar(int period, DistanceSensor* sonar, ServoMotor* servo)
+Radar::Radar(unsigned int period, DistanceSensor* sonar, ServoMotor* servo)
     : Task(period), sonar(sonar), servo(servo), state(RadarState::STOPPED),
       sector(0), dir(1), ticks(0), controlMode(ControlMode::NONE),
       temperature(20), currentSpeed(1), targetAngle(0),

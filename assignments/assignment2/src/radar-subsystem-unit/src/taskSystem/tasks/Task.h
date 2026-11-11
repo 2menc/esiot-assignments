@@ -8,7 +8,7 @@
  */
 class Task {
 protected:
-  int period;                  /**< task period in ms */
+  unsigned int period;                  /**< task period in ms */
 
 private:
   unsigned long lastTickTime;  /**< time of the last tick, in ms */
@@ -18,7 +18,7 @@ public:
    * Creates a task with the given period.
    * @param period task period in ms
    */
-  Task(int period);
+  Task(unsigned int period);
 
   virtual ~Task() {}
 

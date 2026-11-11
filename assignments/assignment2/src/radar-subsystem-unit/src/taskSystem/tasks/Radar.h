@@ -49,7 +49,7 @@ public:
    * @param sonar distance sensor
    * @param servo servo motor
    */
-  Radar(int period, DistanceSensor* sonar, ServoMotor* servo);
+  Radar(unsigned int period, DistanceSensor* sonar, ServoMotor* servo);
 
   void init() override;
   void tick() override;

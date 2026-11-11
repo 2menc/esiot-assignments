@@ -1,6 +1,6 @@
 #include "Communication.h"
 
-Communication::Communication(int period, MessageChannel* channel, CommandParser* parser)
+Communication::Communication(unsigned int period, MessageChannel* channel, CommandParser* parser)
     : Task(period), channel(channel), parser(parser),
       lastCommand({CommandType::NONE, 0}), commandAvailable(false) {
 }

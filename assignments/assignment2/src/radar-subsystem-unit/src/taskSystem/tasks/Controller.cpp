@@ -1,6 +1,6 @@
 #include "Controller.h"
 
-Controller::Controller(int period, Input* input, Radar* radar, UI* ui,
+Controller::Controller(unsigned int period, Input* input, Radar* radar, UI* ui,
                        Communication* communication)
     : Task(period), input(input), radar(radar), ui(ui), communication(communication),
       currentState(State::IDLE), currentSpeed(0), controlMode(ControlMode::NONE),

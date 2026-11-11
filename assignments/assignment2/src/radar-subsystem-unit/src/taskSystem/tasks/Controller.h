@@ -47,7 +47,7 @@ public:
    * @param ui UI task
    * @param communication Communication task
    */
-  Controller(int period, Input* input, Radar* radar, UI* ui, Communication* communication);
+  Controller(unsigned int period, Input* input, Radar* radar, UI* ui, Communication* communication);
 
   void init() override;
   void tick() override;

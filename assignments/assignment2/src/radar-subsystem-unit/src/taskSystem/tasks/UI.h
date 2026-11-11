@@ -42,7 +42,7 @@ public:
    * @param redLed ALARM LED
    * @param greenLed ON LED
    */
-  UI(int period, Screen* lcd, Light* redLed, Light* greenLed);
+  UI(unsigned int period, Screen* lcd, Light* redLed, Light* greenLed);
 
   void init() override;
   void tick() override;

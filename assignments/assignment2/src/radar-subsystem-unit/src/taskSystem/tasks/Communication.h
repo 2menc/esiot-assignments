@@ -25,7 +25,7 @@ public:
    * @param channel channel to the console
    * @param parser command parser
    */
-  Communication(int period, MessageChannel* channel, CommandParser* parser);
+  Communication(unsigned int period, MessageChannel* channel, CommandParser* parser);
 
   void init() override;
   void tick() override;
