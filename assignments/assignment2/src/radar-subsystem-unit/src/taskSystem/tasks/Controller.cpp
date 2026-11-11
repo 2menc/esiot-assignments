@@ -18,4 +18,3 @@ int Controller::getCurrentMinDistance() {
 }
 
 void Controller::sleep() {
-}
