@@ -7,16 +7,47 @@ UI::UI(unsigned int period, Screen* lcd, Light* redLed, Light* greenLed)
 }
 
 void UI::init() {
+  this->redLed->turnOff();
+  this->greenLed->turnOff();
+
+  this->lcd->turnOn();
+  this->blinkState = LedState::ALARM_LED_OFF;
+  this->blinkTicks = 0;
 }
 
 void UI::tick() {
+  // do/
+  if(this->state == State::IDLE) {
+    this->greenLed->turnOn();
+    this->showInfo();
+  }
+
+  switch (this->blinkState) 
+  {
+    case LedState::ALARM_LED_OFF:
+      if(this->state = State::ALARM && this->blinkTicksPassed()) {
+        this->blinkState = LedState::ALARM_LED_ON;
+      } else if(this->state == State::PRE_ALARM) {
+        this->blinkState = LedState::ALARM_LED_ON;
+      }
+      break;
+    case LedState::ALARM_LED_ON:
+      if() {
+
+      }
+      break;
+  }
 }
 
-void UI::setState(State state) {
+bool UI::blinkTicksPassed() {
+
+}
+
+void UI::showInfo() {
+  this->lcd->setText("Sector: " + (String)this->sector +  
+    "|Measure: " + (String)this->distance + "cm");
 }
 
 void UI::setMeasure(Measure measure) {
 }
 
-void UI::blink(Light* led) {
-}

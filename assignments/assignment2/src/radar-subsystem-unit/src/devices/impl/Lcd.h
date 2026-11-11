@@ -13,7 +13,6 @@ private:
   byte i2cAddress;         /**< I2C address of the display */
   String displayedText;    /**< text currently shown */
   LiquidCrystal_I2C lcd;   /**< underlying LCD driver */
-  String message;
 
 public:
   /**
@@ -26,6 +25,9 @@ public:
 
   void setText(const String& text) override;
   String getText() override;
+
+  void turnOn();
+  void turnOff();
 };
 
 #endif

@@ -27,6 +27,7 @@ private:
   State state;          /**< system state to display */
   int sector;           /**< last measured sector */
   int distance;         /**< last measured distance, in cm */
+  bool detected;
 
   /**
    * Toggles a LED when the blink period has elapsed.
@@ -47,12 +48,12 @@ public:
   void init() override;
   void tick() override;
 
-  /**
-   * Sets the system state to display.
-   * @param state current system state
-   */
-  void setState(State state);
+  /** @return true if the ALARM LED has kept its state for ALARM_BLINK_PERIOD */
+  bool blinkTicksPassed();
 
+  /** Writes state, sector and distance on the display. */
+  void showInfo();
+  
   /**
    * Sets the measure to display.
    * @param measure last measure taken by the radar

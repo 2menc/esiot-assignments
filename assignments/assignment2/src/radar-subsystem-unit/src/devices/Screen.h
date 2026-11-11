@@ -16,6 +16,9 @@ public:
 
   /** @return the text currently displayed */
   virtual String getText() = 0;
+
+  virtual void turnOn() = 0;
+  virtual void turnOff() = 0;
 };
 
 #endif
