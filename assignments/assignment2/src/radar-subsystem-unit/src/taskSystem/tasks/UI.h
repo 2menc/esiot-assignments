@@ -28,6 +28,7 @@ private:
   int sector;           /**< last measured sector */
   int distance;         /**< last measured distance, in cm */
   bool detected;
+  unsigned long lastBlinkTime;
 
   /**
    * Toggles a LED when the blink period has elapsed.
