@@ -7,6 +7,7 @@
 #include "Radar.h"
 #include "UI.h"
 #include "Communication.h"
+#include "config.h"
 
 /**
  * Main task of the system: implements the IDLE / WORKING / PRE_ALARM / ALARM FSM.
@@ -37,6 +38,11 @@ private:
 
   /** Puts the MCU in deep sleep until START is pressed. */
   void sleep();
+
+  void enterIdle();
+  void enterWorking();
+  void enterPreAlarm();
+  void enterAlarm();
 
 public:
   /**

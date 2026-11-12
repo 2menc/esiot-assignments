@@ -22,6 +22,11 @@
 // consts
 #define TENSION_MAPPING_FACTOR 0.004883f // 5.0V / (2^10) values;
 
+#define D1 100
+#define D2 10
+
+#define MAX_DIST 200
+
 // LCD
 #define LCD_I2C_ADDRESS 0x27
 
