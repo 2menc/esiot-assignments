@@ -3,8 +3,8 @@
 RSUscheduler::RSUscheduler() : numTasks(0) {}
 
 bool RSUscheduler::registerTask(Task* task) {
-  if(numTasks < MAX_TASKS) {
-    tickables[numTasks] = task;
+  if(this->numTasks < MAX_TASKS) {
+    tickables[this->numTasks++] = task;
     return true;
   }
   return false;
@@ -15,7 +15,8 @@ void RSUscheduler::run() {
 }
 
 void RSUscheduler::tickAll() {
-  for(int i = 0; i < MAX_TASKS; i++) {
-    tickables[i]->tick();
+  const unsigned long now = millis();
+  for (Task* t: this->tickables) {
+    t->update(now);
   }
 }
