@@ -2,9 +2,9 @@
 #define __RADAR__
 
 #include "Task.h"
-#include "SystemTypes.h"
 #include "devices/DistanceSensor.h"
 #include "devices/ServoMotor.h"
+#include "model/config.h"
 
 /** States of the Radar task FSM. */
 enum class RadarState {

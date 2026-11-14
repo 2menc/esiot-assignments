@@ -2,9 +2,9 @@
 #define __UI__
 
 #include "Task.h"
-#include "SystemTypes.h"
 #include "devices/Light.h"
 #include "devices/Screen.h"
+#include "../../model/config.h"
 
 /** States of the alarm LED FSM. */
 enum class LedState {
@@ -23,7 +23,7 @@ private:
   Light* greenLed;      /**< ON LED */
 
   LedState blinkState;  /**< current state of the ALARM LED */
-  int blinkTicks;       /**< ticks elapsed since the last ALARM LED toggle */
+  unsigned int blinkTicks;       /**< ticks elapsed since the last ALARM LED toggle */
   State state;          /**< system state to display */
   int sector;           /**< last measured sector */
   int distance;         /**< last measured distance, in cm */
@@ -60,6 +60,8 @@ public:
    * @param measure last measure taken by the radar
    */
   void setMeasure(Measure measure);
+
+  void setState(State newState);
 };
 
 #endif

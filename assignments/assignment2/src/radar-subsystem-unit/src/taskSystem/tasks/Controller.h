@@ -2,12 +2,11 @@
 #define __CONTROLLER__
 
 #include "Task.h"
-#include "SystemTypes.h"
 #include "Input.h"
 #include "Radar.h"
 #include "UI.h"
 #include "Communication.h"
-#include "config.h"
+#include "../../model/config.h"
 
 /**
  * Main task of the system: implements the IDLE / WORKING / PRE_ALARM / ALARM FSM.
@@ -39,11 +38,19 @@ private:
   /** Puts the MCU in deep sleep until START is pressed. */
   void sleep();
 
+  /* changes the current state */
+  void changeState(State newState);
+
   void enterIdle();
   void enterWorking();
   void enterPreAlarm();
   void enterAlarm();
 
+  /** checks if a value is in this range */
+  bool isBetween(int value, int left, int right);
+
+  /** formats the dists array */
+  void resetDists();
 public:
   /**
    * Creates the task.

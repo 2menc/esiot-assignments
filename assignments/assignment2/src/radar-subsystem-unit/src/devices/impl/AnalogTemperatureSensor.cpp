@@ -1,7 +1,7 @@
 #include "AnalogTemperatureSensor.h"
 
 #include <Arduino.h>
-#include "config.h"
+#include "../../model/config.h"
 
 AnalogTemperatureSensor::AnalogTemperatureSensor(short pin) : pin(pin) {
   pinMode(pin, INPUT);

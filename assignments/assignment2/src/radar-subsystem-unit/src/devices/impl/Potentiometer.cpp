@@ -1,5 +1,5 @@
 #include "Potentiometer.h"
-#include "config.h"
+#include "model/config.h"
 
 #include <Arduino.h>
 

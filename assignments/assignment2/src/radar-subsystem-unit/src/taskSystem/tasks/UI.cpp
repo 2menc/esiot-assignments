@@ -22,10 +22,9 @@ void UI::tick() {
     this->showInfo();
   }
 
-  switch (this->blinkState) 
-  {
+  switch (this->blinkState) {
     case LedState::ALARM_LED_OFF:
-      if(this->state = State::ALARM && this->blinkTicksPassed()) {
+      if(this->state == State::ALARM && this->blinkTicksPassed()) {
         this->blinkState = LedState::ALARM_LED_ON;
       } else if(this->state == State::PRE_ALARM) {
         this->blinkState = LedState::ALARM_LED_ON;
@@ -34,10 +33,10 @@ void UI::tick() {
       break;
     case LedState::ALARM_LED_ON:
       if(this->state == State::WORKING ||
-          this->state = State::IDLE
+          this->state == State::IDLE
       ) {
         this->blinkState = LedState::ALARM_LED_OFF;  
-      } else if(this->state = State::ALARM 
+      } else if(this->state == State::ALARM 
         && this->blinkTicksPassed()
       ) {
         this->blinkState = LedState::ALARM_LED_OFF;
@@ -47,7 +46,7 @@ void UI::tick() {
 }
 
 bool UI::blinkTicksPassed() {
-  reutrn (millis() - this->lastBlinkTime) >= this->blinkTicks;
+  return (millis() - this->lastBlinkTime) >= this->blinkTicks;
 }
 
 void UI::showInfo() {
@@ -60,3 +59,6 @@ void UI::setMeasure(Measure measure) {
   this->distance = measure.distance;
 }
 
+void UI::setState(State newState) {
+  this->state = newState;
+}

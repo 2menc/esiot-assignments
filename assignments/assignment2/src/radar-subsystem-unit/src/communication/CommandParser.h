@@ -16,7 +16,7 @@ enum class CommandType {
 typedef struct Command {
   CommandType type;  /**< type of command */
   int value;         /**< argument, used only by ANGLE */
-} Cmmand;
+} Command;
 
 /** Translates a text message from the console into a Command. */
 class CommandParser {

@@ -5,7 +5,7 @@
 #include "devices/Button.h"
 #include "devices/AngleSensor.h"
 #include "devices/TemperatureSensor.h"
-#include "config.h"
+#include "../../model/config.h"
 
 /** Number of buttons handled by the Input task. */
 #define NUM_BUTTONS 3
