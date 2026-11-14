@@ -18,6 +18,8 @@
 #define PIN_BUTTON_2 13
 #define PIN_BUTTON_3 12
 #define PIN_SERVO 9 // pwm capable
+#define PIN_LED_RED 5
+#define PIN_LED_GREEN 4
 
 // consts
 #define TENSION_MAPPING_FACTOR 0.004883f // 5.0V / (2^10) values;
