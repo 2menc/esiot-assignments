@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include "../MessageChannel.h"
 
+#define MAX_MSG_LENGTH 15
+
 /** Message channel over the USB serial line. */
 class SerialChannel : public MessageChannel {
 private:
@@ -18,7 +20,6 @@ public:
   SerialChannel(unsigned long baudRate);
 
   void sendMessage(const String& msg) override;
-  bool isMessageAvailable() override;
   String receiveMessage() override;
 };
 

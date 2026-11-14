@@ -27,7 +27,10 @@ Command CommandParser::parseCommand(const String& msg) {
   } else if(body.startsWith(PREFIX_ANGLE)) {
     const String arg = body.substring(strlen(PREFIX_ANGLE));
     
-    if(this->isAngleValid(arg)) { cmd.value = arg.toInt(); }
+    if(this->isAngleValid(arg)) { 
+      cmd.value = arg.toInt(); 
+      cmd.type = CommandType::ANGLE;
+    }
   }
 
   return cmd;
@@ -36,7 +39,7 @@ Command CommandParser::parseCommand(const String& msg) {
 bool CommandParser::isAngleValid(const String &text) {
   
   // true if it could be an angle 0 <= a <= 180
-  if(text.length() == 0 || text.length() < 3) { return false; }
+  if(text.length() == 0 || text.length() > 3) { return false; }
 
   for(unsigned int i = 0; i < text.length(); i++) {
     if(!isDigit(text[i])) { return false; }
