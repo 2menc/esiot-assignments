@@ -26,3 +26,7 @@ String SerialChannel::receiveMessage() {
 
   return "";
 }
+
+bool SerialChannel::isMessageAvailable() {
+  return Serial.available();
+}

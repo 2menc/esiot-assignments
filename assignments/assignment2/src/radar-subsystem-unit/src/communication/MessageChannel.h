@@ -14,6 +14,9 @@ public:
    */
   virtual void sendMessage(const String& msg) = 0;
 
+  /** @return true if a complete message has been received */
+  virtual bool isMessageAvailable() = 0;
+
   /**
    * Returns the last complete message and removes it from the channel.
    * @return the received message, without the line terminator

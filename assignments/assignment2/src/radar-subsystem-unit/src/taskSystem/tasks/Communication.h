@@ -2,13 +2,13 @@
 #define __COMMUNICATION__
 
 #include "Task.h"
+#include "../../model/config.h"
 #include "communication/MessageChannel.h"
 #include "communication/CommandParser.h"
-#include "model/config.h"
 
 /**
  * Task exchanging data with the console.
- * Decides what to send and when, and turns incoming messages into commands.
+ * Sends the pending state and measure, and turns incoming messages into commands.
  */
 class Communication : public Task {
 private:
@@ -17,6 +17,17 @@ private:
 
   Command lastCommand;      /**< last command received, not yet consumed */
   bool commandAvailable;    /**< true if lastCommand has not been read yet */
+
+  State pendingState;       /**< state to send at the next tick */
+  bool stateToSend;         /**< true if pendingState has not been sent yet */
+  Measure pendingMeasure;   /**< measure to send at the next tick */
+  bool measureToSend;       /**< true if pendingMeasure has not been sent yet */
+
+  /** Sends the pending state and measure, if any. */
+  void transmit();
+
+  /** Reads a message from the console and stores it if it is a valid command. */
+  void receive();
 
 public:
   /**
@@ -31,13 +42,13 @@ public:
   void tick() override;
 
   /**
-   * Sends the current system state to the console.
+   * Schedules the current system state to be sent to the console.
    * @param state current system state
    */
   void sendStateToCSU(State state);
 
   /**
-   * Sends the result of a sector measure to the console.
+   * Schedules a sector measure to be sent to the console.
    * @param measure measure to send
    */
   void sendSectorToCSU(Measure measure);
@@ -50,6 +61,9 @@ public:
    * @return the last command received
    */
   Command getCommand();
+
+  /** Drops any command received but not read yet. */
+  void discardCommand();
 };
 
 #endif

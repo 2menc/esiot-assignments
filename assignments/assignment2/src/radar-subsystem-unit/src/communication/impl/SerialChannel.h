@@ -20,6 +20,7 @@ public:
   SerialChannel(unsigned long baudRate);
 
   void sendMessage(const String& msg) override;
+  bool isMessageAvailable() override;
   String receiveMessage() override;
 };
 
