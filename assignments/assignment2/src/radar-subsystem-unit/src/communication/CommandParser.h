@@ -20,9 +20,11 @@ typedef struct Command {
 
 /** Translates a text message from the console into a Command. */
 class CommandParser {
+private:
+  
+bool isAngleValid(const String &text);
+
 public:
-  /** Prepares the parser. */
-  void init();
 
   /**
    * Parses a message.
