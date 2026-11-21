@@ -8,6 +8,9 @@ import assignment2.serialComm.api.MessageListener;
  */
 public class MessageReaderAgent extends Thread {
 
+    private static final String STATE_PREFIX = "state:";
+    private static final String SECTOR_PREFIX = "sector:";
+
     private final CommChannel channel;
     private final MessageListener listener;
 
@@ -27,6 +30,15 @@ public class MessageReaderAgent extends Thread {
      */
     @Override
     public void run() {
+        while(! channel.isMessageAvailable()) {}
+
+        try { 
+            final String message = this.channel.receiveMessage();
+            this.parseMessage(message);
+        } catch(InterruptedException e) {
+            super.setDaemon(true);
+            super.interrupt();
+        }
     }
 
     /**
@@ -35,5 +47,10 @@ public class MessageReaderAgent extends Thread {
      * @param message raw message read from the channel
      */
     private void parseMessage(final String message) {
+        final String text = message.trim();
+
+        if(text.startsWith(STATE_PREFIX) || text.startsWith(SECTOR_PREFIX)) {
+            this.listener.handleMessageReceived(text);
+        }
     }
 }
