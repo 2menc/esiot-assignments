@@ -1,19 +1,19 @@
 package assignment2.view.api;
 
-import java.awt.Color;
-
 /**
- * Graphical interface of the console: shows the radar and its controls.
+ * Graphical interface of the console: shows the radar state, the sectors and the remote controls.
+ * Every method must be called on the Swing event thread.
  */
 public interface View {
 
     /**
-     * Changes the colour of a sector.
+     * Shows what the radar found in a sector.
      *
-     * @param sector sector index
-     * @param color new colour of the sector
+     * @param sector sector index, from 0
+     * @param status sector status
+     * @param distance object distance in cm, ignored if status is EMPTY
      */
-    void setSectorColor(int sector, Color color);
+    void setSectorStatus(int sector, SectorStatus status, int distance);
 
     /**
      * Shows the current radar state.
