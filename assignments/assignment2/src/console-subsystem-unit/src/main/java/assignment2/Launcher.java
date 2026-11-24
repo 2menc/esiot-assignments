@@ -1,5 +1,8 @@
 package assignment2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import assignment2.controller.RadarController;
 import assignment2.model.RadarLogic;
 import assignment2.serialComm.SerialCommChannel;
@@ -42,8 +45,15 @@ public final class Launcher {
             return;
         }
         final RadarLogic model = new RadarLogic(NUM_SECTORS);
-        final View view = new LoggerView();
 
-        new RadarController(model, channel, view);
+        final List<View> views = new ArrayList<>();
+        final View loggerView = new LoggerView();
+        views.add(loggerView);
+        final View cliView = new CliView(NUM_SECTORS);
+        views.add(cliView);
+        final View radarView = new RadarView(NUM_SECTORS);
+        views.add(radarView);
+
+        new RadarController(model, channel, views);
     }
 }

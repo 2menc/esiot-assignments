@@ -1,5 +1,7 @@
 package assignment2.controller;
 
+import java.util.List;
+
 import javax.swing.SwingUtilities;
 
 import assignment2.model.RadarLogic;
@@ -33,7 +35,7 @@ public final class RadarController implements MessageListener, ViewListener {
     private static final int D2 = 50;
 
     private final RadarLogic model;
-    private final View view;
+    private final List<View> views;
     private final CommChannel channel;
     private boolean remote;
 
@@ -44,12 +46,15 @@ public final class RadarController implements MessageListener, ViewListener {
      * @param channel channel to the radar
      * @param view console view
      */
-    public RadarController(final RadarLogic model, final CommChannel channel, final View view) {
+    public RadarController(final RadarLogic model, final CommChannel channel, final List<View> views) {
         this.model = model;
         this.channel = channel;
-        this.view = view;
+        this.views = views; // no need to create a defensive copy
         this.remote = false;
-        this.view.setListener(this);
+
+        for(var view : this.views) {
+            view.setListener(this);
+        }
     }
 
     /**
@@ -70,7 +75,10 @@ public final class RadarController implements MessageListener, ViewListener {
         if (this.model.getState() == State.ALARM) {
             this.channel.sendMessage(CMD_TAKE);
             this.remote = true;
-            this.view.setControlsEnabled(true);
+
+            for(var view : this.views) {
+                view.setControlsEnabled(true);
+            }
         }
     }
 
@@ -82,7 +90,10 @@ public final class RadarController implements MessageListener, ViewListener {
         if (this.remote) {
             this.channel.sendMessage(CMD_RELEASE);
             this.remote = false;
-            this.view.setControlsEnabled(false);
+            
+            for(var view : this.views) {
+                view.setControlsEnabled(false);
+            }
         }
     }
 
@@ -137,8 +148,12 @@ public final class RadarController implements MessageListener, ViewListener {
         if (state != State.ALARM) {
             this.remote = false;
         }
-        this.view.setDisplayedState(state.name());
-        this.view.setControlsEnabled(this.remote);
+        
+        for(var view : this.views) {
+            view.setDisplayedState(state.name());
+            view.setControlsEnabled(this.remote);
+        }
+
         this.refreshSectors(); // the model may have cleared the sectors
     }
 
@@ -181,7 +196,10 @@ public final class RadarController implements MessageListener, ViewListener {
     private void showSector(final int sector) {
         final boolean detected = this.model.isSectorDetected(sector);
         final int distance = this.model.getSectorDistance(sector);
-        this.view.setSectorStatus(sector, statusOf(detected, distance), distance);
+                
+        for(var view : this.views) {
+            view.setSectorStatus(sector, statusOf(detected, distance), distance);
+        }
     }
 
     /**
