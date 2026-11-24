@@ -3,8 +3,11 @@ package assignment2;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import assignment2.controller.RadarController;
 import assignment2.model.RadarLogic;
+import assignment2.serialComm.MessageReaderAgent;
 import assignment2.serialComm.SerialCommChannel;
 import assignment2.serialComm.api.CommChannel;
 import assignment2.view.api.View;
@@ -23,7 +26,7 @@ public final class Launcher {
     /** Serial speed, same as in setUpper.cpp. */
     private static final int BAUD_RATE = 9600;
     /** Port used when none is given on the command line. */
-    private static final String DEFAULT_PORT = "COM3";
+    private static final String DEFAULT_PORT = "COM5";
 
     private Launcher() {
     }
@@ -33,7 +36,7 @@ public final class Launcher {
      *
      * @param args command line arguments: the serial port name (e.g. COM3)
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws Exception {
         final String port = args.length > 0 ? args[0] : DEFAULT_PORT;
 
         final CommChannel channel;
@@ -47,13 +50,16 @@ public final class Launcher {
         final RadarLogic model = new RadarLogic(NUM_SECTORS);
 
         final List<View> views = new ArrayList<>();
-        final View loggerView = new LoggerView();
-        views.add(loggerView);
-        final View cliView = new CliView(NUM_SECTORS);
-        views.add(cliView);
-        final View radarView = new RadarView(NUM_SECTORS);
-        views.add(radarView);
+        // the views are created on the Swing thread, like every other view call
+        SwingUtilities.invokeAndWait(() -> {
+            views.add(new LoggerView());
+            views.add(new RadarView(NUM_SECTORS));
+            // CliView and LoggerView both write on the terminal and would mix their output:
+            // use the CLI alone, in place of the two lines above
+            // views.add(new CliView(NUM_SECTORS));
+        });
 
-        new RadarController(model, channel, views);
+        final RadarController controller = new RadarController(model, channel, views);
+        new MessageReaderAgent(channel, controller).start();
     }
 }

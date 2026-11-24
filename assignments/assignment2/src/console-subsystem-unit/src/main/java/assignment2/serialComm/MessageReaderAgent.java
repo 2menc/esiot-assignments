@@ -23,6 +23,7 @@ public class MessageReaderAgent extends Thread {
     public MessageReaderAgent(final CommChannel channel, final MessageListener listener) {
         this.channel = channel;
         this.listener = listener;
+        this.setDaemon(true); // does not keep the program alive when the window is closed
     }
 
     /**
@@ -30,14 +31,13 @@ public class MessageReaderAgent extends Thread {
      */
     @Override
     public void run() {
-        while(! channel.isMessageAvailable()) {}
-
-        try { 
-            final String message = this.channel.receiveMessage();
-            this.parseMessage(message);
-        } catch(InterruptedException e) {
-            super.setDaemon(true);
-            super.interrupt();
+        while (!this.isInterrupted()) {
+            try {
+                final String message = this.channel.receiveMessage(); // waits for a message
+                this.parseMessage(message);
+            } catch (final InterruptedException e) {
+                this.interrupt(); // restore the flag, so the loop ends
+            }
         }
     }
 

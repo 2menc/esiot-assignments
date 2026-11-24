@@ -32,6 +32,12 @@ public class SerialCommChannel implements CommChannel, SerialPortEventListener {
         this.serialPort = new SerialPort(port);
         this.queue = new ArrayBlockingQueue<>(QUEUE_SIZE);
         this.currentMessage = new StringBuffer();
+
+        this.serialPort.openPort();
+        this.serialPort.setParams(baudRate,
+                SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+        this.serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR);
+        this.serialPort.addEventListener(this, SerialPort.MASK_RXCHAR); // calls serialEvent on new data
     }
 
     @Override
@@ -83,33 +89,28 @@ public class SerialCommChannel implements CommChannel, SerialPortEventListener {
      */
     @Override
     public void serialEvent(final SerialPortEvent event) {
-
-        // checks if the current event is "receiving character"
-        if(event.isRXCHAR()) {
-            try {
-                String message = this.serialPort.readString(event.getEventValue());
-                message = message.replaceAll("\r", "\n");
-
-                this.currentMessage.append(message);
-
-                boolean canGo = true;
-                while(canGo) {
-                    final String message2 = this.currentMessage.toString();
-                    int index = message2.indexOf("\n");
-
-                    if(index >= 0) {
-                        this.queue.put(message2.substring(0, index));
-                        this.currentMessage = new StringBuffer("");
-
-                        if(index+1 < message2.length()) {
-                            this.currentMessage.append(message2.substring(index+1));
-                        } else { canGo = false; }
-                    }
-                }
-            } catch(Exception e) {
-                e.printStackTrace();
-                System.err.println("Error in resolving string from COM port: " + e);
+        if (!event.isRXCHAR()) {
+            return;
+        }
+        try {
+            final String received = this.serialPort.readString(event.getEventValue());
+            if (received == null) {
+                return;
             }
+            // one character at a time: a complete line ends with '\n'
+            for (final char c : received.toCharArray()) {
+                if (c == '\n') {
+                    final String line = this.currentMessage.toString().trim();
+                    this.currentMessage = new StringBuffer();
+                    if (!line.isEmpty()) {
+                        this.queue.put(line);
+                    }
+                } else if (c != '\r') {
+                    this.currentMessage.append(c);
+                }
+            }
+        } catch (final Exception e) {
+            System.err.println("Error reading from the serial port: " + e);
         }
     }
 }
