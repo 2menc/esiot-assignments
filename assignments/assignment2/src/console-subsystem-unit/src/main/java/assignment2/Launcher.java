@@ -6,6 +6,7 @@ import assignment2.serialComm.SerialCommChannel;
 import assignment2.serialComm.api.CommChannel;
 import assignment2.view.api.View;
 import assignment2.view.impl.cli.CliView;
+import assignment2.view.impl.logger.LoggerView;
 import assignment2.view.impl.swing.RadarView;
 
 /**
@@ -41,7 +42,7 @@ public final class Launcher {
             return;
         }
         final RadarLogic model = new RadarLogic(NUM_SECTORS);
-        final View view = new CliView(NUM_SECTORS);
+        final View view = new LoggerView();
 
         new RadarController(model, channel, view);
     }
