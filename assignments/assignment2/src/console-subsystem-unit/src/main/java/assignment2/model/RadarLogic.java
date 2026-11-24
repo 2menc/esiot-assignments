@@ -9,6 +9,9 @@ import java.util.List;
  */
 public class RadarLogic {
 
+    /** Distance stored for a sector with no object. */
+    private static final int NO_DISTANCE = -1;
+
     private State currentState;
     private final List<Integer> sectorDists;
     private final List<Boolean> sectorDetected;
@@ -20,8 +23,9 @@ public class RadarLogic {
      */
     public RadarLogic(final int numSectors) {
         this.currentState = State.IDLE;
-        this.sectorDists = new ArrayList<>(numSectors);
-        this.sectorDetected = new ArrayList<>(numSectors);
+
+        this.sectorDists = new ArrayList<>(Collections.nCopies(numSectors, NO_DISTANCE));
+        this.sectorDetected = new ArrayList<>(Collections.nCopies(numSectors, false));
     }
 
     /**
@@ -79,11 +83,12 @@ public class RadarLogic {
     }
 
     /**
-     * Keeps the sector data consistent with the current state,
-     * 
-     *  @param previous state before the change
+     * Keeps the sector data consistent with the state change:
+     * the sectors are cleared when the radar stops or restarts after an alarm.
+     *
+     * @param previousState state before the change
      */
-    private void handleLogicState(State previousState) {
+    private void handleLogicState(final State previousState) {
         if(this.currentState == State.IDLE ||
             (previousState == State.ALARM && this.currentState == State.WORKING)
         ) {
@@ -91,8 +96,11 @@ public class RadarLogic {
         }
     }
 
+    /**
+     * Marks every sector as empty.
+     */
     private void clearSectors() {
-        Collections.fill(this.sectorDists, -1);
+        Collections.fill(this.sectorDists, NO_DISTANCE);
         Collections.fill(this.sectorDetected, false);
     }
 }
