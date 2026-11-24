@@ -1,5 +1,4 @@
 #include "Task.h"
-#include "TimerOne.h"
 
 Task::Task(unsigned int period) : period(period), lastTickTime(0) {}
 

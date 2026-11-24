@@ -4,9 +4,12 @@
 #define SOUND_SPEED 331.45f // ms^-1
 #define SOUND_SPEED_TEMPERATURE_FACTOR 0.62f
 
-#define ECHO_TIMEOUT_MICROS 20000   // ~3.4 m range, within the 50 ms task period
+#define ECHO_TIMEOUT_MICROS 12000   // ~2 m range: longer waits only slow down the task
 
 #define MICROS_IN_A_SECOND 1000000.0f
+
+/** Shortest distance the HC-SR04 can measure, in cm: below it the reading is noise. */
+#define MIN_DISTANCE_CM 2
 
 #include "../DistanceSensor.h"
 

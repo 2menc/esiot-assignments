@@ -11,11 +11,17 @@ int UltrasonicSensor::getDistance(float temperature) {
   this->sendEcho();
 
   const long microSeconds = pulseIn(this->echoPin, HIGH, ECHO_TIMEOUT_MICROS);
+  Serial.println(String("dbg:us=") + microSeconds);
   if(microSeconds == 0) {return -1;}
 
   const float currentSoundSpeed = SOUND_SPEED + SOUND_SPEED_TEMPERATURE_FACTOR * temperature;
 
-  return (int)(microSeconds/MICROS_IN_A_SECOND * currentSoundSpeed / 2 * 100); // cm
+  const int distance = (int)(microSeconds/MICROS_IN_A_SECOND * currentSoundSpeed / 2 * 100); // cm
+
+  // a reading below the sensor range is noise, not an object
+  if(distance < MIN_DISTANCE_CM) {return -1;}
+
+  return distance;
 }
 
 void UltrasonicSensor::sendEcho() {

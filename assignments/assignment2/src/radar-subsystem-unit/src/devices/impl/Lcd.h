@@ -5,6 +5,9 @@
 #include <LiquidCrystal_I2C.h>
 #include "../Screen.h"
 
+/** Maximum number of rows handled by the LCD class. */
+#define MAX_LCD_ROWS 4
+
 /** Character LCD connected through the I2C bus. */
 class Lcd : public Screen {
 private:
@@ -13,6 +16,7 @@ private:
   byte i2cAddress;         /**< I2C address of the display */
   String displayedText;    /**< text currently shown */
   LiquidCrystal_I2C lcd;   /**< underlying LCD driver */
+  String shownRows[MAX_LCD_ROWS];  /**< text currently on each row, to skip rows that did not change */
 
 public:
   /**

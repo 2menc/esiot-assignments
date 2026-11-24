@@ -25,6 +25,11 @@ void Radar::tick() {
     
     case RadarState::MOVING:
       this->ticks++;
+      if(this->ticks == this->currentSpeed - 1) {
+        // switch the servo off one tick before measuring: the motor stops drawing
+        // current, and the noise of switching it off is over when the sonar fires
+        this->servo->stop();
+      }
       if(this->ticks >= this->currentSpeed) {  //has moved
         this->enterMeasuring();
       }
@@ -53,7 +58,10 @@ void Radar::tick() {
       } else if(this->controlMode == ControlMode::NONE) {
         this->changeState(RadarState::STOPPED);
       } else {
-        this->servo->moveTo(this->targetAngle);
+        // ignore the small noise of the potentiometer, or the servo keeps shaking
+        if (abs(this->targetAngle - this->servo->getCurrentAngle()) >= MANUAL_DEADBAND) {
+          this->servo->moveTo(this->targetAngle);
+        }
       }
       break;
   }   

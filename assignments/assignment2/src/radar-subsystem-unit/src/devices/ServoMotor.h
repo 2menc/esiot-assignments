@@ -19,7 +19,7 @@ public:
   ServoMotor(short pin);
 
   /**
-   * Rotates the servo to the given angle.
+   * Rotates the servo to the given angle, attaching it again if it was stopped.
    * @param angle target angle, from 0 to 180 degrees
    */
   void moveTo(int angle);
@@ -27,7 +27,10 @@ public:
   /** @return the last commanded angle, in degrees */
   int getCurrentAngle();
 
-  /** Detaches the servo, so it no longer holds its position. */
+  /**
+   * Detaches the servo: the motor stops drawing current and no longer holds its position.
+   * Used while the sonar measures, because the servo current disturbs the 5V line.
+   */
   void stop();
 };
 

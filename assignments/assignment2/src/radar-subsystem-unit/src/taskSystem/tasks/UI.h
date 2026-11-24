@@ -14,27 +14,29 @@ enum class LedState {
 
 /**
  * Task driving the local user interface: ON and ALARM LEDs and the LCD.
- * Shows the current state and the last measured sector.
+ * Outside IDLE the ON LED is lit and the LCD shows the last measured sector.
+ * The ALARM LED is steady in PRE_ALARM and blinks in ALARM.
  */
 class UI : public Task {
 private:
-  Screen* lcd;          /**< display for sector and distance */
-  Light* redLed;        /**< ALARM LED */
-  Light* greenLed;      /**< ON LED */
+  Screen* lcd;                  /**< display for sector and distance */
+  Light* redLed;                /**< ALARM LED */
+  Light* greenLed;              /**< ON LED */
 
-  LedState blinkState;  /**< current state of the ALARM LED */
-  unsigned int blinkTicks;       /**< ticks elapsed since the last ALARM LED toggle */
-  State state;          /**< system state to display */
-  int sector;           /**< last measured sector */
-  int distance;         /**< last measured distance, in cm */
-  bool detected;
-  unsigned long lastBlinkTime;
+  LedState blinkState;          /**< current state of the ALARM LED */
+  unsigned long lastBlinkTime;  /**< time of the last ALARM LED toggle, in ms */
+  State state;                  /**< system state to display */
+  int sector;                   /**< last measured sector, from 0 */
+  int distance;                 /**< last measured distance, in cm */
+  bool detected;                /**< true if an object was found in the last sector */
+  bool stateChanged;            /**< true if the state changed since the last tick */
+  bool measureChanged;          /**< true if a new measure arrived since the last tick */
 
-  /**
-   * Toggles a LED when the blink period has elapsed.
-   * @param led LED to blink
-   */
-  void blink(Light* led);
+  /** @return true if the ALARM LED has kept its state for LED_BLINK_PERIOD */
+  bool blinkTicksPassed();
+
+  /** Writes sector and distance on the display. */
+  void showInfo();
 
 public:
   /**
@@ -49,18 +51,16 @@ public:
   void init() override;
   void tick() override;
 
-  /** @return true if the ALARM LED has kept its state for ALARM_BLINK_PERIOD */
-  bool blinkTicksPassed();
-
-  /** Writes state, sector and distance on the display. */
-  void showInfo();
-  
   /**
    * Sets the measure to display.
    * @param measure last measure taken by the radar
    */
   void setMeasure(Measure measure);
 
+  /**
+   * Sets the system state to display.
+   * @param newState current system state
+   */
   void setState(State newState);
 };
 

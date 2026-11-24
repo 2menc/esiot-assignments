@@ -12,7 +12,7 @@ int Potentiometer::getAngle() {
 }
 
 int Potentiometer::convertVToAngle(float V) {
-  return map(V, 0, 1023, 0, 180);
+  return (int) (V / 5.0f * 180);  // 0..5 V -> 0..180 degrees
 }
 
 float Potentiometer::measureTension() {

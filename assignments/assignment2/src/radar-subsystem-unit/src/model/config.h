@@ -27,10 +27,15 @@
 #define D1 20 // cm
 #define D2 50 // cm
 
-#define S1 4  // ticks per sector
-#define S2 2  // ticks per sectoe
+// scan speed, in ticks spent on each sector (fewer ticks = faster).
+// At least 3: the servo needs 2 ticks to reach the sector before it is switched off.
+#define S1 6  // normal speed
+#define S2 3  // pre-alarm speed, twice as fast
 
 #define MAX_DIST 200
+
+/** In MANUAL mode the servo moves only if the angle changes at least this much, in degrees. */
+#define MANUAL_DEADBAND 2
 
 // LCD
 #define LCD_I2C_ADDRESS 0x27

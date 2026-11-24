@@ -18,6 +18,6 @@ float AnalogTemperatureSensor::getTension() {
 }
 
 float AnalogTemperatureSensor::convertVtoTemp(float V) {
-  return V - 0.5f;
+  return (V - 0.5f) * 100;  // TMP36: 0.5 V at 0 C, 10 mV per degree
 }
 

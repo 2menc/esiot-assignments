@@ -6,7 +6,11 @@ ServoMotor::ServoMotor(short pin) : pin(pin), currentAngle(0) {
 }
 
 void ServoMotor::moveTo(int angle) {
-  servo.write(angle); // < than 180, gets parsed as an angle
+  // write first, so when the servo is attached again it goes straight to the new angle
+  this->servo.write(angle);
+  if (!this->servo.attached()) {
+    this->servo.attach(this->pin);
+  }
   this->currentAngle = angle;
 }
 
@@ -15,5 +19,5 @@ int ServoMotor::getCurrentAngle() {
 }
 
 void ServoMotor::stop() {
-  servo.write(this->currentAngle);
+  this->servo.detach();
 }

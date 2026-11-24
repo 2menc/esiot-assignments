@@ -5,11 +5,14 @@
 Controller::Controller(unsigned int period, Input* input, Radar* radar, UI* ui, Communication* communication)
   : Task(period), 
     input(input), radar(radar), ui(ui), communication(communication),
-    currentState(State::IDLE), currentSpeed(0), controlMode(ControlMode::NONE),
+    currentState(State::IDLE),
     remote(false), potAngle(0), targetAngle(0), temperature(20), remoteAngle(0) {
 }
 
-void Controller::init() { }
+void Controller::init() {
+  this->resetDists();
+  this->changeState(State::IDLE);
+}
 
 void Controller::tick() {
   this->potAngle = this->input->getPotAngle();
@@ -42,7 +45,7 @@ void Controller::tick() {
       if(currEvent == ButtonEvent::STOP) { this->enterIdle(); } 
       else if(minDist >= D1 && minDist < D2) {
         this->enterPreAlarm();
-      } else if(minDist >= 0 && minDist < D2) { this->enterAlarm(); }
+      } else if(minDist >= 0 && minDist < D1) { this->enterAlarm(); }
       break;
 
     case State::PRE_ALARM:
@@ -81,15 +84,20 @@ void Controller::tick() {
 
 
 int Controller::getCurrentMinDistance() {
-  int min = 1000;
-  for(int i: this->dists) {
-    if(i < min) { min = i; }
-  }
+  int min = -1;  // -1 = no object found yet
 
-  return min > 0 ? min : -1;
+  for (int i = 0; i < NUM_SECTORS; i++) {
+    const int d = this->dists[i];
+    // skip empty sectors (-1), keep the smallest distance
+    if (d >= 0 && (min == -1 || d < min)) {
+      min = d;
+    }
+  }
+  return min;
 }
 
 void Controller::sleep() {
+  Serial.flush();  // let the last messages leave before sleeping
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);  // deep sleep
   sleep_enable();
   sleep_mode();
@@ -102,25 +110,27 @@ void Controller::sleep() {
 void Controller::enterIdle() {
   this->radar->setControlMode(ControlMode::NONE);
   this->resetDists();
-  this->sleep();
   this->changeState(State::IDLE);
+  // no sleep here: the IDLE case sleeps from the next tick,
+  // after UI and Communication have switched everything off
 }
 
 void Controller::enterWorking() {
-  this->controlMode = ControlMode::AUTO;
-  this->currentSpeed = S1;
+  this->radar->setControlMode(ControlMode::AUTO);
+  this->radar->setSpeed(S1);
   this->changeState(State::WORKING);
 }
 
 void Controller::enterPreAlarm() {
   this->radar->setControlMode(ControlMode::AUTO);
-  this->currentSpeed = S2;
+  this->radar->setSpeed(S2);
   this->changeState(State::PRE_ALARM);
 }
 
 void Controller::enterAlarm() {
-   this->radar->setControlMode(ControlMode::MANUAL);
-   this->remote = false;
+  this->radar->setControlMode(ControlMode::MANUAL);
+  this->remote = false;
+  this->communication->discardCommand();  // ignore commands sent before the alarm
   this->changeState(State::ALARM);
 }
   

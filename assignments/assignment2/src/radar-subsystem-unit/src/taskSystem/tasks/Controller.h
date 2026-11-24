@@ -21,8 +21,6 @@ private:
 
   State currentState;            /**< current FSM state */
   int dists[NUM_SECTORS];        /**< last distance per sector, negative if no object */
-  int currentSpeed;              /**< scan speed sent to the radar */
-  ControlMode controlMode;       /**< control mode sent to the radar */
   bool remote;                   /**< true if the console has taken control in ALARM */
   int potAngle;                  /**< last potentiometer angle */
   int targetAngle;               /**< angle sent to the radar in MANUAL mode */

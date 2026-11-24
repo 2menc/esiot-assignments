@@ -1,5 +1,5 @@
 #include "RSUscheduler.h"
-#include <TimerOne.h>
+#include <Arduino.h>
 
 RSUscheduler::RSUscheduler() : numTasks(0) {}
 
@@ -17,7 +17,7 @@ void RSUscheduler::run() {
 
 void RSUscheduler::tickAll() {
   const unsigned long now = millis();
-  for (Task* t: this->tickables) {
-    t->update(now);
+  for (int i = 0; i < this->numTasks; i++) {
+    this->tickables[i]->update(now);
   }
 }
